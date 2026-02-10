@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Guía rápida de Git y GitHub para aprendices ADSO-3239137. Aprende fork, clone, commit, push y buenas prácticas desde cero." />
+  <meta property="og:title" content="Guía rápida Git + GitHub — ADSO-3239137" />
+  <meta property="og:description" content="Primera vez con Git: fork, clone, commit, push y buenas prácticas para aprendices SENA." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://github.com/code-sena/ADSO-3239137" />
+  <title>Guía rápida Git + GitHub — ADSO-3239137</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Barra de progreso -->
+  <div class="progress-bar" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+  <!-- Navegación -->
+  <header class="site-header" id="siteHeader">
+    <nav class="nav-container" aria-label="Navegación principal">
+      <a href="#hero" class="nav-logo">ADSO-3239137</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <li><a href="#git-vs-github">Git vs GitHub</a></li>
+        <li><a href="#requisitos">Requisitos</a></li>
+        <li><a href="#flujo-fork">Flujo Fork</a></li>
+        <li><a href="#ruta-local">Ruta Local</a></li>
+        <li><a href="#ruta-web">Ruta Web</a></li>
+        <li><a href="#buenas-practicas">Prácticas</a></li>
+        <li><a href="#troubleshooting">Errores</a></li>
+        <li><a href="#checklist">Checklist</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="container">
+        <h1>Guía rápida Git + GitHub — ADSO-3239137</h1>
+        <p class="hero-subtitle">Primera vez con Git: fork, clone, commit, push y buenas prácticas.</p>
+        <div class="hero-buttons">
+          <a href="#ruta-local" class="btn btn-primary">Empezar (Ruta Local Recomendada)</a>
+          <a href="#ruta-web" class="btn btn-secondary">Ruta Web (GitHub)</a>
+        </div>
+        <div class="code-block" data-label="Repo oficial">
+          <pre><code>https://github.com/code-sena/ADSO-3239137.git</code></pre>
+          <button class="copy-btn" aria-label="Copiar al portapapeles">Copiar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GIT VS GITHUB ============ -->
+    <section class="section" id="git-vs-github">
+      <div class="container">
+        <h2>Git vs GitHub</h2>
+        <p class="section-intro">Muchos los confunden, pero cumplen roles diferentes. Piensa en esta analogía:</p>
+        <div class="cards-grid two-cols">
+          <article class="card">
+            <div class="card-icon">💻</div>
+            <h3>Git</h3>
+            <p><strong>Tu historial local.</strong> Es un programa que instalas en tu computador. Guarda cada cambio que hagas como una "foto" (commit). Funciona sin internet.</p>
+            <p class="analogy">📓 Analogía: es como tu cuaderno personal donde anotas cada avance de un proyecto.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">☁️</div>
+            <h3>GitHub</h3>
+            <p><strong>La nube + colaboración.</strong> Es una plataforma web donde subes tu historial Git para que otros lo vean, lo descarguen y colaboren.</p>
+            <p class="analogy">📚 Analogía: es como la biblioteca compartida donde publicas tu cuaderno para que todos accedan.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REQUISITOS ============ -->
+    <section class="section section-alt" id="requisitos">
+      <div class="container">
+        <h2>Requisitos e instalación</h2>
+        <p class="section-intro">Antes de empezar necesitas tener Git instalado y configurado.</p>
+
+        <article class="card">
+          <h3>1. Descargar Git</h3>
+          <p>Visita el sitio oficial e instala la versión para tu sistema operativo:</p>
+          <p><a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer" class="link-external">https://git-scm.com/</a></p>
+        </article>
+
+        <article class="card">
+          <h3>2. Verificar instalación</h3>
+          <div class="code-block" data-label="Terminal">
+            <pre><code>git --version</code></pre>
+            <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>3. Configurar identidad</h3>
+          <div class="code-block" data-label="Terminal">
+            <pre><code>git config --global user.name "NOMBRE APELLIDO"</code></pre>
+            <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+          </div>
+          <div class="code-block" data-label="Terminal">
+            <pre><code>git config --global user.email "correo@ejemplo.com"</code></pre>
+            <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>4. Verificar configuración</h3>
+          <div class="code-block" data-label="Terminal">
+            <pre><code>git config --list</code></pre>
+            <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ FLUJO FORK ============ -->
+    <section class="section" id="flujo-fork">
+      <div class="container">
+        <h2>Flujo oficial del curso (Fork por aprendiz)</h2>
+        <p class="section-intro">Cada aprendiz trabaja en su propia copia del repositorio (fork), <strong>nunca directamente en el repo oficial</strong>.</p>
+
+        <div class="steps">
+          <article class="step-card">
+            <span class="step-number">1</span>
+            <h3>Crear tu Fork</h3>
+            <p>Ve al repositorio oficial en GitHub y haz clic en el botón <strong>"Fork"</strong> (esquina superior derecha). Esto crea una copia en tu cuenta.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">2</span>
+            <h3>Clonar tu Fork</h3>
+            <p>Copia la URL de <em>tu fork</em> (no del repo oficial) y clónalo en tu computador:</p>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>git clone https://github.com/TU_USUARIO/ADSO-3239137.git</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+          <article class="step-card">
+            <span class="step-number">3</span>
+            <h3>Entrar a la carpeta</h3>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>cd ADSO-3239137</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+          <article class="step-card">
+            <span class="step-number">4</span>
+            <h3>Trabajar y subir cambios</h3>
+            <p>Sigue la <a href="#ruta-local">Ruta Local</a> para hacer tus entregas semana a semana en tu fork.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RUTA LOCAL ============ -->
+    <section class="section section-alt" id="ruta-local">
+      <div class="container">
+        <h2>Ruta A — Local <span class="badge">Recomendada</span></h2>
+        <p class="section-intro">El flujo que usarás cada vez que entregues una actividad. Memoriza estos 5 pasos.</p>
+
+        <div class="steps">
+          <article class="step-card">
+            <span class="step-number">1</span>
+            <h3><code>git pull</code></h3>
+            <p>Descarga los últimos cambios del repositorio remoto. <strong>Siempre empieza por aquí</strong> para evitar conflictos.</p>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>git pull</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <span class="step-number">2</span>
+            <h3><code>git status</code></h3>
+            <p>Muestra el estado actual: qué archivos cambiaste, cuáles son nuevos y cuáles están listos para commit.</p>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>git status</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <span class="step-number">3</span>
+            <h3><code>git add .</code></h3>
+            <p>Prepara todos los archivos modificados para el próximo commit (los pone en el "escenario").</p>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>git add .</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <span class="step-number">4</span>
+            <h3><code>git commit -m "mensaje"</code></h3>
+            <p>Guarda una "foto" de tus cambios con un mensaje descriptivo. Sé claro: indica qué hiciste y en qué semana.</p>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>git commit -m "semana 01: agrego landing page git"</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+
+          <article class="step-card">
+            <span class="step-number">5</span>
+            <h3><code>git push</code></h3>
+            <p>Sube tus commits al repositorio remoto en GitHub. Después de esto tu entrega estará visible online.</p>
+            <div class="code-block" data-label="Terminal">
+              <pre><code>git push</code></pre>
+              <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RUTA WEB ============ -->
+    <section class="section" id="ruta-web">
+      <div class="container">
+        <h2>Ruta B — Web (GitHub)</h2>
+        <p class="section-intro">Alternativa desde el navegador. Útil en emergencias, pero <strong>se recomienda usar la ruta local</strong>.</p>
+
+        <div class="cards-grid two-cols">
+          <article class="card">
+            <div class="card-icon">📤</div>
+            <h3>Upload files</h3>
+            <p>En tu fork, haz clic en <strong>"Add file" → "Upload files"</strong>. Arrastra tus archivos y haz commit directamente.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">✏️</div>
+            <h3>Editar archivo (lápiz)</h3>
+            <p>Abre cualquier archivo y haz clic en el ícono de <strong>lápiz</strong> para editarlo en línea. Al terminar, haz commit.</p>
+          </article>
+          <article class="card">
+            <div class="card-icon">✅</div>
+            <h3>Commit desde web</h3>
+            <p>Al guardar cambios, GitHub te pide un mensaje de commit. Escribe algo descriptivo y confirma.</p>
+          </article>
+          <article class="card card-warning">
+            <div class="card-icon">⚠️</div>
+            <h3>Limitaciones</h3>
+            <ul>
+              <li>No puedes subir carpetas vacías.</li>
+              <li>Difícil manejar múltiples archivos.</li>
+              <li>No tienes historial local.</li>
+              <li>No practicas los comandos reales.</li>
+            </ul>
+            <p><strong>Recomendación:</strong> usa la ruta local siempre que puedas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BUENAS PRÁCTICAS ============ -->
+    <section class="section section-alt" id="buenas-practicas">
+      <div class="container">
+        <h2>Buenas prácticas de repositorio</h2>
+
+        <article class="card">
+          <h3>📁 Estructura por semanas</h3>
+          <p>Organiza tu trabajo en carpetas numeradas por semana:</p>
+          <div class="code-block" data-label="Estructura">
+            <pre><code>ADSO-3239137/
+├── 01-week/
+│   ├── 01-session/
+│   └── 02-optional-activity/
+├── 02-week/
+│   ├── 01-session/
+│   └── 02-optional-activity/
+├── 03-week/
+│   └── ...
+└── ...</code></pre>
+            <button class="copy-btn" aria-label="Copiar estructura">Copiar</button>
+          </div>
+        </article>
+
+        <article class="card card-danger">
+          <h3>🚫 Qué NO hacer</h3>
+          <ul class="dont-list">
+            <li><strong>No trabajes sobre el repo oficial sin hacer fork.</strong> Siempre trabaja en tu copia personal.</li>
+            <li><strong>No subas archivos innecesarios</strong> (.exe, .zip pesados, node_modules, etc.).</li>
+            <li><strong>No mezcles semanas.</strong> Cada entrega va en su carpeta correspondiente.</li>
+            <li><strong>No hagas commits sin mensaje claro.</strong> Evita mensajes como "update" o "asdfg".</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ TROUBLESHOOTING ============ -->
+    <section class="section" id="troubleshooting">
+      <div class="container">
+        <h2>Troubleshooting (Errores comunes)</h2>
+        <p class="section-intro">Haz clic en cada error para ver la solución.</p>
+
+        <div class="accordion-group">
+          <!-- Error 1 -->
+          <details class="accordion">
+            <summary class="accordion-header">
+              <span class="accordion-icon" aria-hidden="true"></span>
+              <span><strong>Error:</strong> "No upstream branch"</span>
+            </summary>
+            <div class="accordion-body">
+              <p>Ocurre cuando tu rama local no está vinculada a una rama remota. Ejecútalo una vez:</p>
+              <div class="code-block" data-label="Terminal">
+                <pre><code>git push --set-upstream origin main</code></pre>
+                <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+              </div>
+              <p>Si tu rama se llama diferente (por ejemplo <code>master</code>), reemplaza <code>main</code> por el nombre correcto.</p>
+            </div>
+          </details>
+
+          <!-- Error 2 -->
+          <details class="accordion">
+            <summary class="accordion-header">
+              <span class="accordion-icon" aria-hidden="true"></span>
+              <span><strong>Error:</strong> "non-fast-forward" / "rejected"</span>
+            </summary>
+            <div class="accordion-body">
+              <p>Significa que el repositorio remoto tiene cambios que tú no tienes localmente. Solución:</p>
+              <div class="code-block" data-label="Terminal">
+                <pre><code>git pull</code></pre>
+                <button class="copy-btn" aria-label="Copiar comando">Copiar</button>
+              </div>
+              <p>Luego vuelve a intentar <code>git push</code>. <strong>Siempre haz pull antes de push.</strong></p>
+            </div>
+          </details>
+
+          <!-- Error 3 -->
+          <details class="accordion">
+            <summary class="accordion-header">
+              <span class="accordion-icon" aria-hidden="true"></span>
+              <span><strong>Error:</strong> Conflictos de merge</span>
+            </summary>
+            <div class="accordion-body">
+              <p>Ocurre cuando dos personas editaron la misma línea. Git marca el conflicto así:</p>
+              <div class="code-block" data-label="Archivo con conflicto">
+                <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+Tu código local
+=======
+Código del remoto
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</code></pre>
+                <button class="copy-btn" aria-label="Copiar ejemplo">Copiar</button>
+              </div>
+              <p><strong>Pasos para resolver:</strong></p>
+              <ol>
+                <li>Abre el archivo con conflicto.</li>
+                <li>Elige qué código conservar (borra las marcas <code>&lt;&lt;&lt;</code>, <code>===</code>, <code>&gt;&gt;&gt;</code>).</li>
+                <li>Guarda el archivo.</li>
+                <li>Ejecuta <code>git add .</code> → <code>git commit -m "resuelvo conflicto"</code> → <code>git push</code>.</li>
+              </ol>
+            </div>
+          </details>
+
+          <!-- Error 4 -->
+          <details class="accordion">
+            <summary class="accordion-header">
+              <span class="accordion-icon" aria-hidden="true"></span>
+              <span><strong>Error:</strong> Problemas de autenticación</span>
+            </summary>
+            <div class="accordion-body">
+              <p>GitHub ya no acepta contraseña por terminal. Necesitas un <strong>Personal Access Token (PAT)</strong>:</p>
+              <ol>
+                <li>Ve a <a href="https://github.com/settings/tokens" target="_blank" rel="noopener noreferrer">GitHub → Settings → Developer settings → Tokens</a>.</li>
+                <li>Genera un nuevo token con permiso <strong>"repo"</strong>.</li>
+                <li>Cuando Git te pida contraseña, pega el token en lugar de tu contraseña.</li>
+              </ol>
+              <p><strong>Alternativa:</strong> Configura SSH o usa <a href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">GitHub CLI</a> (<code>gh auth login</code>).</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CHECKLIST ============ -->
+    <section class="section section-alt" id="checklist">
+      <div class="container">
+        <h2>Checklist final de entrega</h2>
+        <p class="section-intro">Marca cada paso antes de dar por terminada tu entrega semanal.</p>
+
+        <article class="card checklist-card">
+          <form id="checklistForm" aria-label="Lista de verificación de entrega">
+            <label class="checklist-item">
+              <input type="checkbox" name="check" value="fork" />
+              <span>Trabajé en <strong>mi fork</strong> (no en el repo oficial)</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" name="check" value="pull" />
+              <span>Hice <code>git pull</code> antes de empezar</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" name="check" value="status" />
+              <span>Revisé <code>git status</code> para verificar mis cambios</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" name="check" value="commit" />
+              <span>Mi commit tiene un <strong>mensaje claro</strong> y descriptivo</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" name="check" value="push" />
+              <span><code>git push</code> ejecutado sin errores</span>
+            </label>
+            <label class="checklist-item">
+              <input type="checkbox" name="check" value="folder" />
+              <span>Mis archivos están en la <strong>carpeta de la semana correcta</strong></span>
+            </label>
+          </form>
+          <div class="checklist-progress">
+            <div class="checklist-progress-bar" id="checklistProgressBar"></div>
+          </div>
+          <p class="checklist-status" id="checklistStatus">0 de 6 completados</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>ADSO-3239137 — Guía Git + GitHub para aprendices</p>
+      <p>Repo oficial: <a href="https://github.com/code-sena/ADSO-3239137" target="_blank" rel="noopener noreferrer">github.com/code-sena/ADSO-3239137</a></p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
