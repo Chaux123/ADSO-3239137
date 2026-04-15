@@ -1,0 +1,90 @@
+BD
+Prueba de desempeño Modelado de datos y construcción física en MySQL
+Ver guía
+Actividad aplicada para aprendices
+Construcción de MER, MR y modelo físico en MySQL
+En esta prueba de desempeño, los aprendices deben analizar un dominio de negocio, representar su estructura en un Modelo Entidad Relación (MER), transformarlo a un Modelo Relacional (MR) y finalmente construir el esquema físico en el motor de base de datos MySQL. Se recomienda usar draw.io para los diagramas y el motor SQL para la implementación.
+
+Ver entidades Ver fases
+Entregables esperados
+MER completo y legible
+MR derivado del análisis
+Script físico en MySQL
+Relaciones, llaves y restricciones
+Defensa técnica del diseño
+Draw.io MySQL Normalización
+Propósito
+¿Para qué sirve este ejercicio?
+Este ejercicio permite que el aprendiz demuestre su capacidad para interpretar un dominio de información, identificar entidades, definir atributos, establecer relaciones y llevar el diseño conceptual a una representación lógica y física. El objetivo no es solo dibujar tablas, sino comprender cómo una necesidad del negocio se traduce en una estructura de base de datos consistente, escalable y verificable.
+
+Durante el desarrollo, el aprendiz deberá justificar por qué cada entidad existe, cómo se conecta con las demás y qué restricciones garantizan la integridad de los datos. Para facilitar la comprensión del ejercicio, los atributos clave aparecen resaltados con otro color dentro de los párrafos, de manera que sea más sencillo distinguir la función de cada componente antes de construir el diagrama y el script SQL.
+
+Ruta recomendada
+Leer el dominio y separar las entidades.
+Construir el MER en draw.io.
+Transformar el MER a MR.
+Definir llaves primarias y foráneas.
+Implementar el modelo físico en MySQL.
+Validar integridad y coherencia del diseño.
+Fases de trabajo
+Secuencia esperada para la prueba
+1
+Análisis del dominio
+Revise los grupos de entidades y determine qué información administra cada una. En esta etapa debe comprender qué datos describen la ubicación geográfica, qué datos soportan la parte comercial y qué datos controlan el acceso al sistema.
+
+2
+Construcción del MER
+Modele las entidades, sus atributos y sus relaciones. Se recomienda usar draw.io por claridad visual, facilidad de edición y posibilidad de exportar evidencia para revisión del instructor.
+
+3
+Transformación a MR
+Lleve el modelo conceptual a tablas relacionales. Aquí debe definir cardinalidades resueltas, llaves primarias, llaves foráneas y normalización básica para evitar redundancia y ambigüedad.
+
+4
+Implementación física en MySQL
+Construya el script SQL con sus tipos de datos, restricciones, relaciones y estructura final. El resultado debe ser ejecutable y coherente con el MR previamente definido.
+
+Dominios del ejercicio
+Entidades a modelar
+El ejercicio se divide en tres bloques para facilitar el análisis: ubicación, comercial y seguridad/acceso. Cada bloque tiene una finalidad específica dentro del sistema.
+
+🌍
+Dominio de ubicación
+Este grupo organiza la jerarquía geográfica del sistema. La entidad continente sirve para agrupar grandes regiones; pais permite representar cada nación; departamento descompone la organización territorial; ciudad ubica los centros urbanos; y barrio precisa el nivel local. Este conjunto es útil para construir direcciones consistentes, segmentar información y mantener una estructura territorial clara dentro de la base de datos.
+
+🛒
+Dominio comercial
+La entidad categoria clasifica los productos según su tipo o familia. La entidad producto almacena la información principal de los artículos disponibles. La entidad factura representa la transacción comercial realizada, mientras que detalle_factura desglosa cada producto vendido dentro de una factura. Este bloque permite estructurar inventario, venta y trazabilidad de operaciones comerciales de forma ordenada.
+
+🔐
+Dominio de seguridad y acceso
+La entidad persona concentra los datos básicos del individuo. La entidad usuario registra la cuenta con la que se ingresa al sistema. La entidad roles define permisos o perfiles de acceso. Este grupo permite separar identidad, autenticación y autorización, lo cual mejora la organización del modelo y facilita la administración del acceso dentro del sistema.
+
+Orientación técnica
+Sugerencias para la construcción del modelo
+MER
+Identifique entidades, atributos, relaciones y cardinalidades. Evite iniciar directamente por el SQL; primero debe quedar clara la lógica del negocio en el diagrama conceptual.
+
+MR
+Convierta cada entidad en tabla, determine las llaves primarias y resuelva relaciones de uno a muchos o muchos a muchos según corresponda. Asegure coherencia entre nombre de tabla y propósito funcional.
+
+Modelo físico
+En MySQL defina tipos de datos apropiados, restricciones NOT NULL, PRIMARY KEY, FOREIGN KEY y longitudes acordes al dato. La estructura final debe reflejar fielmente el modelo relacional previamente diseñado.
+
+Evidencia esperada
+Entregue el diagrama MER, el MR y el script SQL funcional. El instructor podrá revisar consistencia, integridad, organización y correspondencia entre los tres niveles del modelado.
+
+Pendientes institucionales
+Datos que no están en las entradas
+Pendiente: competencia oficial.
+
+Pendiente: RAP asociado a la prueba.
+
+Pendiente: criterios de evaluación oficiales.
+
+Pendiente: instrumento de evaluación oficial (lista de chequeo o rúbrica).
+
+El landing deja lista la actividad de aprendizaje y la orientación técnica, pero estos elementos institucionales deben ser completados por el instructor con base en la guía de aprendizaje o el formato institucional que corresponda.
+
+Prueba de desempeño
+MER, MR y construcción física en MySQL para aprendices.
