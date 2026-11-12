@@ -1,0 +1,89 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.key
+*.pem
+
+# Node.js and React
+node_modules/
+**/node_modules/
+dist/
+build/
+coverage/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# PHP and Laravel
+vendor/
+**/vendor/
+.phpunit.result.cache
+.phpunit.cache/
+.phpactor.yml
+
+# Laravel generated files
+api/bootstrap/cache/*.php
+!api/bootstrap/cache/.gitignore
+api/storage/logs/*
+api/storage/framework/cache/data/*
+api/storage/framework/sessions/*
+api/storage/framework/views/*
+api/storage/app/private/*
+
+# Test and coverage reports
+coverage/
+phpunit.xml.bak
+.phpunit-watcher.yml
+test-results/
+playwright-report/
+
+# Local databases and backups
+*.sqlite
+*.sqlite3
+*.db
+*.sql.gz
+*.dump
+*.bak
+
+# Docker local overrides
+docker-compose.override.yml
+compose.override.yml
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+.cache/
+tmp/
+temp/
+
+# Python helper files
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Keep documentation and project source files
+# README.md
+# docs/
+# api/
+# app/
+# page/
+# infra/
+# tool/
