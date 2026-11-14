@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 final class Presenters
 {
     /**
-     * Format a toy for API responses.
+     * Format toy data for API responses.
      */
     public static function toy(object $toy): array
     {
@@ -27,7 +27,7 @@ final class Presenters
     }
 
     /**
-     * Format a loan with its historical items.
+     * Format loan data and its historical toy snapshots.
      */
     public static function loan(object $loan): array
     {
@@ -36,59 +36,52 @@ final class Presenters
             ->orderBy('id')
             ->get();
 
-        $formattedItems = $items->map(
-            function ($item): array {
-                $values = (array) $item;
+        $now = CarbonImmutable::now('UTC');
 
-                // Preserve the snapshot values stored
-                // when the loan was created.
-                $snapshot = [];
+        $allReturned = $items->isNotEmpty()
+            && $items->every(
+                fn ($item) => $item->returned_at !== null
+            );
 
-                foreach ($values as $key => $value) {
-                    if (str_starts_with($key, 'snapshot_')) {
-                        $snapshot[$key] = $value;
-                    }
-                }
-
-                return [
-                    'id' => (string) $item->id,
-                    'toy_id' => (string) $item->toy_id,
-                    'returned_at' => $item->returned_at,
-                    'snapshot' => $snapshot,
-                ];
+        $hasOverdue = $items->contains(
+            function ($item) use ($now): bool {
+                return $item->returned_at === null
+                    && CarbonImmutable::parse(
+                        $item->due_at,
+                        'UTC'
+                    )->lessThan($now);
             }
-        )->values()->all();
-
-        $allReturned = count($formattedItems) > 0;
-
-        foreach ($formattedItems as $item) {
-            if ($item['returned_at'] === null) {
-                $allReturned = false;
-                break;
-            }
-        }
-
-        $dueAt = CarbonImmutable::parse(
-            $loan->due_at,
-            'UTC'
         );
 
         if ($allReturned) {
             $status = 'returned';
-        } elseif ($dueAt->lessThan(
-            CarbonImmutable::now('UTC')
-        )) {
+        } elseif ($hasOverdue) {
             $status = 'overdue';
         } else {
             $status = 'active';
         }
 
+        $formattedItems = $items->map(
+            function ($item): array {
+                return [
+                    'id' => (string) $item->id,
+                    'toy_id' => (string) $item->toy_id,
+                    'due_at' => $item->due_at,
+                    'returned_at' => $item->returned_at,
+                    'snapshot' => [
+                        'toy_name' => $item->toy_name,
+                        'reference' => $item->reference,
+                        'category_name' => $item->category_name,
+                    ],
+                ];
+            }
+        )->values()->all();
+
         return [
             'id' => (string) $loan->id,
             'family_id' => (string) $loan->family_id,
-            'promoter_id' => (string) $loan->promoter_id,
-            'created_at' => $loan->created_at,
-            'due_at' => $loan->due_at,
+            'promoter_id' => (string) $loan->loaned_by_promoter_id,
+            'loaned_at' => $loan->loaned_at,
             'status' => $status,
             'items' => $formattedItems,
         ];
