@@ -26,33 +26,62 @@ final class LoanController extends BaseController
         ]);
 
         $query = DB::table('loans')
-            ->orderByDesc('created_at')
+            ->orderByDesc('loaned_at')
             ->orderBy('id');
 
         if (!empty($data['family_id'])) {
             $query->where(
-                'family_id',
+                'loans.family_id',
                 $data['family_id']
             );
+        }
+
+        // Filter loan status before pagination.
+        if (!empty($data['status'])) {
+            $now = now('UTC');
+            $status = $data['status'];
+
+            $hasPendingItems = function ($query) {
+                $query->selectRaw('1')
+                    ->from('loan_items')
+                    ->whereColumn(
+                        'loan_items.loan_id',
+                        'loans.id'
+                    )
+                    ->whereNull('loan_items.returned_at');
+            };
+
+            $hasOverdueItems = function ($query) use ($now) {
+                $query->selectRaw('1')
+                    ->from('loan_items')
+                    ->whereColumn(
+                        'loan_items.loan_id',
+                        'loans.id'
+                    )
+                    ->whereNull('loan_items.returned_at')
+                    ->where('loan_items.due_at', '<', $now);
+            };
+
+            if ($status === 'returned') {
+                // Every toy in the loan was returned.
+                $query->whereNotExists($hasPendingItems);
+
+            } elseif ($status === 'overdue') {
+                // At least one unreturned toy is overdue.
+                $query->whereExists($hasOverdueItems);
+
+            } elseif ($status === 'active') {
+                // There are pending toys, but none overdue.
+                $query->whereExists($hasPendingItems)
+                    ->whereNotExists($hasOverdueItems);
+            }
         }
 
         $result = JsonData::paged(
             $query,
             $request,
-            function ($loan) {
-                return Presenters::loan($loan);
-            }
+            fn ($loan) => Presenters::loan($loan)
         );
-
-        if (!empty($data['status'])) {
-            $result['data'] = array_values(
-                array_filter(
-                    $result['data'],
-                    fn ($loan) =>
-                        $loan['status'] === $data['status']
-                )
-            );
-        }
 
         return response()->json($result);
     }
@@ -97,9 +126,7 @@ final class LoanController extends BaseController
             ],
         ]);
 
-        $promoter = $request->attributes->get(
-            'promoter'
-        );
+        $promoter = $request->attributes->get('promoter');
 
         if (!$promoter) {
             throw new ApiException(
@@ -125,9 +152,7 @@ final class LoanController extends BaseController
         string $loanId,
         string $itemId
     ): JsonResponse {
-        $promoter = $request->attributes->get(
-            'promoter'
-        );
+        $promoter = $request->attributes->get('promoter');
 
         if (!$promoter) {
             throw new ApiException(
