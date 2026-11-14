@@ -1,0 +1,46 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Composer dependencies
+/vendor/
+
+# PHPUnit and test artifacts
+.phpunit.cache/
+.phpunit.result.cache
+/coverage/
+
+# Laravel runtime files
+/storage/logs/*
+!/storage/logs/.gitignore
+
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+
+/storage/app/private/*
+!/storage/app/private/.gitignore
+
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# Local development tools
+/.idea/
+/.vscode/
+/.phpactor.yml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+*.bak
