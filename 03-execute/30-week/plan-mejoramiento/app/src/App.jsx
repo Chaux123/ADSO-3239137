@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import CatalogPage from './pages/CatalogPage.jsx';
 import FamilyPage from './pages/FamilyPage.jsx';
 import LoanPage from './pages/LoanPage.jsx';
+import ReportPage from './pages/ReportPage.jsx';
 
 import { useAuth } from './context/AuthContext.jsx';
 
@@ -172,10 +173,7 @@ export default function App() {
             path="/reportes"
             element={
               <ProtectedPage adminOnly>
-                <TemporaryPage
-                  title="Reportes"
-                  description="Aquí podrás consultar los juguetes más prestados."
-                />
+                <ReportPage />
               </ProtectedPage>
             }
           />
@@ -195,11 +193,4 @@ export default function App() {
     </div>
   );
 }
-
-
-
-
-
-
-
 
