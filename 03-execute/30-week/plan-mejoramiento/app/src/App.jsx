@@ -10,6 +10,8 @@ import {
 import LoginPage from './pages/LoginPage.jsx';
 import CatalogPage from './pages/CatalogPage.jsx';
 import FamilyPage from './pages/FamilyPage.jsx';
+import LoanPage from './pages/LoanPage.jsx';
+
 import { useAuth } from './context/AuthContext.jsx';
 
 function TemporaryPage({ title, description }) {
@@ -161,10 +163,7 @@ export default function App() {
             path="/prestamos"
             element={
               <ProtectedPage>
-                <TemporaryPage
-                  title="Gestión de préstamos"
-                  description="Aquí podrás registrar préstamos y devoluciones."
-                />
+                <LoanPage />
               </ProtectedPage>
             }
           />
@@ -196,6 +195,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
