@@ -9,6 +9,7 @@ import {
 
 import LoginPage from './pages/LoginPage.jsx';
 import CatalogPage from './pages/CatalogPage.jsx';
+import FamilyPage from './pages/FamilyPage.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 
 function TemporaryPage({ title, description }) {
@@ -151,10 +152,7 @@ export default function App() {
             path="/familias"
             element={
               <ProtectedPage>
-                <TemporaryPage
-                  title="Gestión de familias"
-                  description="Aquí podrás registrar y consultar las familias."
-                />
+                <FamilyPage />
               </ProtectedPage>
             }
           />
@@ -198,6 +196,8 @@ export default function App() {
     </div>
   );
 }
+
+
 
 
 
