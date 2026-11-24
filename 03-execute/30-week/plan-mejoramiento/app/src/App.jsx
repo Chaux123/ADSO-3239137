@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 
 import LoginPage from './pages/LoginPage.jsx';
+import CatalogPage from './pages/CatalogPage.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 
 function TemporaryPage({ title, description }) {
@@ -116,11 +117,10 @@ export default function App() {
 
         {isAuthenticated && (
           <p style={{ marginTop: '16px', marginBottom: 0 }}>
-            Sesión iniciada como: {
-              role === 'admin'
-                ? 'Administrador'
-                : 'Promotor'
-            }
+            Sesión iniciada como:{' '}
+            {role === 'admin'
+              ? 'Administrador'
+              : 'Promotor'}
           </p>
         )}
       </header>
@@ -139,12 +139,7 @@ export default function App() {
 
           <Route
             path="/catalogo"
-            element={
-              <TemporaryPage
-                title="Catálogo de juguetes"
-                description="Aquí podrás consultar los juguetes disponibles."
-              />
-            }
+            element={<CatalogPage />}
           />
 
           <Route
@@ -203,4 +198,7 @@ export default function App() {
     </div>
   );
 }
+
+
+
 
