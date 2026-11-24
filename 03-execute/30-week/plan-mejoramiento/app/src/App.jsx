@@ -12,6 +12,7 @@ import CatalogPage from './pages/CatalogPage.jsx';
 import FamilyPage from './pages/FamilyPage.jsx';
 import LoanPage from './pages/LoanPage.jsx';
 import ReportPage from './pages/ReportPage.jsx';
+import ToyManagementPage from './pages/ToyManagementPage.jsx';
 
 import { useAuth } from './context/AuthContext.jsx';
 
@@ -68,7 +69,10 @@ export default function App() {
         ]
       : []),
     ...(isAdmin
-      ? [{ to: '/reportes', label: 'Reportes' }]
+      ? [
+          { to: '/administrar-juguetes', label: 'Administrar juguetes' },
+          { to: '/reportes', label: 'Reportes' }
+        ]
       : [])
   ];
 
@@ -170,6 +174,15 @@ export default function App() {
           />
 
           <Route
+            path="/administrar-juguetes"
+            element={
+              <ProtectedPage adminOnly>
+                <ToyManagementPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
             path="/reportes"
             element={
               <ProtectedPage adminOnly>
@@ -193,4 +206,6 @@ export default function App() {
     </div>
   );
 }
+
+
 
