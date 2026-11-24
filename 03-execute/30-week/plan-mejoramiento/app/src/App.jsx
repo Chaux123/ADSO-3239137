@@ -13,6 +13,7 @@ import FamilyPage from './pages/FamilyPage.jsx';
 import LoanPage from './pages/LoanPage.jsx';
 import ReportPage from './pages/ReportPage.jsx';
 import ToyManagementPage from './pages/ToyManagementPage.jsx';
+import PromoterPage from './pages/PromoterPage.jsx';
 
 import { useAuth } from './context/AuthContext.jsx';
 
@@ -62,16 +63,28 @@ export default function App() {
   const links = [
     { to: '/', label: 'Inicio', end: true },
     { to: '/catalogo', label: 'Catálogo' },
+
     ...(isAuthenticated
       ? [
           { to: '/familias', label: 'Familias' },
           { to: '/prestamos', label: 'Préstamos' }
         ]
       : []),
+
     ...(isAdmin
       ? [
-          { to: '/administrar-juguetes', label: 'Administrar juguetes' },
-          { to: '/reportes', label: 'Reportes' }
+          {
+            to: '/administrar-juguetes',
+            label: 'Administrar juguetes'
+          },
+          {
+            to: '/administrar-promotores',
+            label: 'Administrar promotores'
+          },
+          {
+            to: '/reportes',
+            label: 'Reportes'
+          }
         ]
       : [])
   ];
@@ -80,6 +93,7 @@ export default function App() {
     <div className="app-container">
       <header className="app-header">
         <h1>Toy Library</h1>
+
         <p>Biblioteca comunitaria de juguetes</p>
 
         <nav
@@ -124,7 +138,12 @@ export default function App() {
         </nav>
 
         {isAuthenticated && (
-          <p style={{ marginTop: '16px', marginBottom: 0 }}>
+          <p
+            style={{
+              marginTop: '16px',
+              marginBottom: 0
+            }}
+          >
             Sesión iniciada como:{' '}
             {role === 'admin'
               ? 'Administrador'
@@ -183,6 +202,15 @@ export default function App() {
           />
 
           <Route
+            path="/administrar-promotores"
+            element={
+              <ProtectedPage adminOnly>
+                <PromoterPage />
+              </ProtectedPage>
+            }
+          />
+
+          <Route
             path="/reportes"
             element={
               <ProtectedPage adminOnly>
@@ -206,6 +234,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
