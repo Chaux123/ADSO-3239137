@@ -15,6 +15,7 @@ import ReportPage from './pages/ReportPage.jsx';
 import ToyManagementPage from './pages/ToyManagementPage.jsx';
 import PromoterPage from './pages/PromoterPage.jsx';
 
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 
 function TemporaryPage({ title, description }) {
@@ -24,25 +25,6 @@ function TemporaryPage({ title, description }) {
       <p>{description}</p>
     </section>
   );
-}
-
-function ProtectedPage({ children, adminOnly = false }) {
-  const { isAuthenticated, isAdmin } = useAuth();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
-  if (adminOnly && !isAdmin) {
-    return (
-      <TemporaryPage
-        title="Acceso denegado"
-        description="No tienes permisos para consultar esta sección."
-      />
-    );
-  }
-
-  return children;
 }
 
 export default function App() {
@@ -177,45 +159,45 @@ export default function App() {
           <Route
             path="/familias"
             element={
-              <ProtectedPage>
+              <ProtectedRoute>
                 <FamilyPage />
-              </ProtectedPage>
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="/prestamos"
             element={
-              <ProtectedPage>
+              <ProtectedRoute>
                 <LoanPage />
-              </ProtectedPage>
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="/administrar-juguetes"
             element={
-              <ProtectedPage adminOnly>
+              <ProtectedRoute adminOnly>
                 <ToyManagementPage />
-              </ProtectedPage>
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="/administrar-promotores"
             element={
-              <ProtectedPage adminOnly>
+              <ProtectedRoute adminOnly>
                 <PromoterPage />
-              </ProtectedPage>
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="/reportes"
             element={
-              <ProtectedPage adminOnly>
+              <ProtectedRoute adminOnly>
                 <ReportPage />
-              </ProtectedPage>
+              </ProtectedRoute>
             }
           />
 
