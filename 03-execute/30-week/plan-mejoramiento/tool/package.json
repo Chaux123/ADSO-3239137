@@ -1,0 +1,15 @@
+
+{
+  "name": "toy-library-seed-tool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Development data seeding tool for the Toy Library REST API",
+  "type": "module",
+  "scripts": {
+    "seed": "node --env-file=.env seed-api.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "UNLICENSED"
+}
