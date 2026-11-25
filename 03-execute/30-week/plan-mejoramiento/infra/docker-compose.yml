@@ -86,6 +86,7 @@ services:
 
     environment:
       VITE_API_URL: /api/v1
+      API_PROXY_TARGET: http://api:8000
 
     volumes:
       - ../app:/workspace/app
