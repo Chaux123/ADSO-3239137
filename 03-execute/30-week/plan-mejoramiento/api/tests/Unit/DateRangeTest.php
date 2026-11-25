@@ -1,39 +1,80 @@
+
 <?php
 
 namespace Tests\Unit;
 
-use App\Domain\ValueObjects\DateRange;
+use App\Domain\DateRange;
 use PHPUnit\Framework\TestCase;
 
-class DateRangeTest extends TestCase
+final class DateRangeTest extends TestCase
 {
-    public function test_end_date_cannot_be_before_start_date(): void
+    public function test_accepts_valid_date_range(): void
+    {
+        DateRange::validate(
+            '2026-11-01',
+            '2026-11-10'
+        );
+
+        $this->assertTrue(true);
+    }
+
+    public function test_accepts_same_start_and_end_date(): void
+    {
+        DateRange::validate(
+            '2026-11-01',
+            '2026-11-01'
+        );
+
+        $this->assertTrue(true);
+    }
+
+    public function test_rejects_end_date_before_start_date(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        new DateRange(
-            new \DateTimeImmutable('2026-11-15'),
-            new \DateTimeImmutable('2026-11-14')
+        DateRange::validate(
+            '2026-11-10',
+            '2026-11-01'
         );
     }
 
-    public function test_end_date_can_be_equal_to_start_date(): void
+    public function test_rejects_invalid_start_date(): void
     {
-        $range = new DateRange(
-            new \DateTimeImmutable('2026-11-15'),
-            new \DateTimeImmutable('2026-11-15')
-        );
+        $this->expectException(\InvalidArgumentException::class);
 
-        $this->assertInstanceOf(DateRange::class, $range);
+        DateRange::validate(
+            'fecha-invalida',
+            '2026-11-10'
+        );
     }
 
-    public function test_end_date_can_be_after_start_date(): void
+    public function test_rejects_invalid_end_date(): void
     {
-        $range = new DateRange(
-            new \DateTimeImmutable('2026-11-15'),
-            new \DateTimeImmutable('2026-11-24')
-        );
+        $this->expectException(\InvalidArgumentException::class);
 
-        $this->assertInstanceOf(DateRange::class, $range);
+        DateRange::validate(
+            '2026-11-01',
+            'fecha-invalida'
+        );
+    }
+
+    public function test_rejects_empty_start_date(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        DateRange::validate(
+            '',
+            '2026-11-10'
+        );
+    }
+
+    public function test_rejects_empty_end_date(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        DateRange::validate(
+            '2026-11-01',
+            ''
+        );
     }
 }
