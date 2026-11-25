@@ -1,0 +1,45 @@
+
+# Toy Library - Docker Infrastructure
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Docker Compose local overrides
+docker-compose.override.yml
+docker-compose.local.yml
+compose.override.yml
+compose.local.yml
+
+# Local database backups
+backups/
+*.sql
+*.dump
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor settings
+.idea/
+.vscode/
+
+# Local certificates and private keys
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local infrastructure data
+data/
+postgres-data/
