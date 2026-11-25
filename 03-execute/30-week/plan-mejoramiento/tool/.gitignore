@@ -1,0 +1,46 @@
+
+# Toy Library - API Seeding Tool
+
+# Dependencies
+node_modules/
+
+# Local environment variables and credentials
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Test and coverage results
+coverage/
+.nyc_output/
+
+# Local output files
+output/
+reports/
+
+# Editor settings
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
