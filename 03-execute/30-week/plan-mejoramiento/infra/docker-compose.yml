@@ -1,0 +1,110 @@
+
+name: toy-library
+
+services:
+
+  # PostgreSQL database
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: toy_library
+      POSTGRES_USER: toy_library
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in infra/.env}
+
+    ports:
+      - "127.0.0.1:5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U toy_library -d toy_library
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - toy_library_network
+
+  # Laravel REST API
+  api:
+    build:
+      context: ..
+      dockerfile: infra/docker/php/Dockerfile
+
+    working_dir: /var/www/html
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:8000:8000"
+
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: toy_library
+      DB_USERNAME: toy_library
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in infra/.env}
+
+      LOG_CHANNEL: stderr
+
+    volumes:
+      - ../api:/var/www/html
+
+    command: >
+      sh -c "composer install --no-interaction &&
+      php artisan serve --host=0.0.0.0 --port=8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - toy_library_network
+
+  # React and Vite frontend
+  frontend:
+    build:
+      context: ..
+      dockerfile: infra/docker/node/Dockerfile
+
+    working_dir: /workspace/app
+
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:5173:5173"
+
+    environment:
+      VITE_API_URL: /api/v1
+
+    volumes:
+      - ../app:/workspace/app
+      - frontend_node_modules:/workspace/app/node_modules
+
+    command: >
+      sh -c "npm install &&
+      npm run dev -- --host 0.0.0.0"
+
+    depends_on:
+      - api
+
+    networks:
+      - toy_library_network
+
+volumes:
+  postgres_data:
+  frontend_node_modules:
+
+networks:
+  toy_library_network:
+    driver: bridge
