@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+import ToyCover from '../components/ToyCover.jsx';
 
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -9,7 +10,6 @@ import {
   deleteToyCover,
   getCategories,
   getToys,
-  getToyCoverUrl,
   updateToy,
   uploadToyCover
 } from '../services/api.js';
@@ -99,12 +99,14 @@ export default function ToyManagementPage() {
         );
 
         const currentPage = Number(
+          response?.pagination?.page ??
           response?.meta?.current_page ??
             response?.current_page ??
             page
         );
 
         const lastPage = Number(
+          response?.pagination?.total_pages ??
           response?.meta?.last_page ??
             response?.last_page ??
             currentPage
@@ -512,8 +514,8 @@ export default function ToyManagementPage() {
                   key={toy.id}
                 >
                   {toy.cover_key && (
-                    <img
-                      src={`${getToyCoverUrl(toy.id)}?v=${encodeURIComponent(toy.cover_key)}`}
+                    <ToyCover
+                      toy={toy}
                       alt={`Imagen de ${toy.name}`}
                       loading="lazy"
                       style={{

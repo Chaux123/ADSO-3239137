@@ -61,12 +61,14 @@ export default function FamilyPage() {
         setFamilies(items);
 
         const currentPage = Number(
+          response?.pagination?.page ??
           response?.meta?.current_page ??
           response?.current_page ??
           page
         );
 
         const lastPage = Number(
+          response?.pagination?.total_pages ??
           response?.meta?.last_page ??
           response?.last_page ??
           currentPage
@@ -392,7 +394,7 @@ export default function FamilyPage() {
 
           <p>
             <strong>Préstamos activos:</strong>{' '}
-            {selectedFamily.active_loans ?? 0}
+            {Array.isArray(selectedFamily.active_loans) ? selectedFamily.active_loans.length : (selectedFamily.active_loans ?? 0)}
           </p>
 
           <button

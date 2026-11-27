@@ -152,11 +152,12 @@ export function uploadToyCover(id, file) {
   const formData = new FormData();
 
   formData.append('file', file);
+  formData.append('_method', 'PUT');
 
   return apiRequest(
     `/toys/${encodeURIComponent(id)}/cover`,
     {
-      method: 'PUT',
+      method: 'POST',
       body: formData
     }
   );
@@ -244,8 +245,8 @@ export function createPromoter(data) {
 
 // REPORTES
 
-export function getMostLoanedReport(limit = 10) {
+export function getMostLoanedReport(limit = 10, from, to) {
   return apiRequest(
-    `/reports/most-loaned?limit=${encodeURIComponent(limit)}`
+    `/reports/most-loaned?${new URLSearchParams({ limit, from, to })}`
   );
 }

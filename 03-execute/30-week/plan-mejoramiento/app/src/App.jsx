@@ -44,10 +44,10 @@ export default function App() {
 
   const links = [
     { to: '/', label: 'Inicio', end: true },
-    { to: '/catalogo', label: 'Catálogo' },
 
     ...(isAuthenticated
       ? [
+          { to: '/catalogo', label: 'Catálogo' },
           { to: '/familias', label: 'Familias' },
           { to: '/prestamos', label: 'Préstamos' }
         ]
@@ -148,7 +148,7 @@ export default function App() {
 
           <Route
             path="/catalogo"
-            element={<CatalogPage />}
+            element={<ProtectedRoute><CatalogPage /></ProtectedRoute>}
           />
 
           <Route

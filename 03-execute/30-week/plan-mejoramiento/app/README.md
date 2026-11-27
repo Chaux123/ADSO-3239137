@@ -204,19 +204,7 @@ Antes de producción se debe revisar la estrategia de almacenamiento de tokens y
 
 ## 11. Estado del proyecto
 
-Los archivos principales del frontend están preparados.
-
-Pendiente de verificación:
-
-- Instalación de dependencias.
-- Compilación de React.
-- Integración con la API Laravel.
-- Pruebas funcionales.
-- Validación de permisos.
-- Pruebas de errores y disponibilidad.
-- Correcciones identificadas durante las pruebas.
-
-La existencia del código no significa que la aplicación haya sido ejecutada o validada.
+React se compiló y se comprobaron en navegador los recorridos principales y los permisos de los dos roles. Las pruebas realizadas y sus límites se detallan en `../docs/evidencia-pruebas.md`.
 
 ## 12. Proyecto académico
 

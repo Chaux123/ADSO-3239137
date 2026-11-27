@@ -89,9 +89,17 @@ Verificar que la configuración de PostgreSQL sea:
 
 La variable DB_PASSWORD de Laravel debe coincidir con la contraseña configurada en infra/.env.
 
-También debe existir una clave APP_KEY válida.
+Configurar una clave APP_KEY válida en api/.env antes de iniciar los contenedores.
 
-La clave JWT debe configurarse con un valor seguro.
+Para generarla en PowerShell sin instalar dependencias, ejecutar lo siguiente y copiar el resultado como valor de `APP_KEY`:
+
+    $random = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    $keyBytes = New-Object byte[] 32
+    $random.GetBytes($keyBytes)
+    'base64:' + [Convert]::ToBase64String($keyBytes)
+    $random.Dispose()
+
+Configurar JWT_SECRET con al menos 32 caracteres e INITIAL_ADMIN_USERNAME e INITIAL_ADMIN_PASSWORD (mínimo 8 caracteres) en api/.env. El administrador se crea solo si aún no existe; cambiar estas variables después no cambia su contraseña.
 
 No publicar claves ni contraseñas reales en el repositorio.
 
@@ -131,11 +139,9 @@ Para revisar PostgreSQL:
 
     docker compose logs -f db
 
-## 9. Preparar Laravel
+## 9. Inicialización automática de Laravel
 
-Cuando el contenedor API esté funcionando, generar la clave de Laravel si todavía no existe:
-
-    docker compose exec api php artisan key:generate
+Las migraciones y los datos iniciales se ejecutan al iniciar el contenedor. Si ya hay datos, la cuenta administradora existente no se modifica. La clave de aplicación se prepara antes del primer inicio como se indica en la sección 6.
 
 Las migraciones deben ejecutarse únicamente después de comprobar la configuración de la base de datos.
 
@@ -200,11 +206,12 @@ Las pruebas automatizadas del backend se encuentran en:
 
     ../api/tests/
 
-Para ejecutarlas desde la carpeta infra:
+Para ejecutarlas desde la carpeta infra, crear primero una base desechable independiente (solo una vez) y especificarla expresamente:
 
-    docker compose exec api php artisan test
+    docker compose exec db createdb -U toy_library toy_library_test
+    docker compose exec -e DB_DATABASE=toy_library_test api php artisan test
 
-Antes de ejecutarlas, se debe configurar una base de datos de pruebas independiente.
+La batería ejecuta migraciones y borra datos en `toy_library_test`; no usar ese nombre para una base con información que deba conservarse. Si la base ya existe, omitir `createdb` después de confirmar que es desechable. La aplicación rechaza ejecutar las pruebas con otro nombre de base o con `DB_URL`.
 
 Nunca ejecutar pruebas que modifiquen o eliminen datos sobre una base de producción.
 
@@ -248,19 +255,7 @@ Archivos de infraestructura preparados:
 - .gitignore
 - README.md
 
-Pendiente de verificación:
-
-- Construcción de imágenes Docker.
-- Instalación de dependencias.
-- Generación de claves.
-- Conexión con PostgreSQL.
-- Ejecución de migraciones.
-- Carga de datos iniciales.
-- Comunicación entre React y Laravel.
-- Ejecución de pruebas automatizadas.
-- Correcciones de integración.
-
-Los comandos de este documento describen el procedimiento previsto, pero todavía no se ha verificado su ejecución.
+Las verificaciones y sus límites se registran en `../docs/evidencia-pruebas.md`.
 
 ## 16. Información académica
 

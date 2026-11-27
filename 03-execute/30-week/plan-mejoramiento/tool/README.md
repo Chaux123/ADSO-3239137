@@ -94,7 +94,7 @@ Con Laravel y PostgreSQL funcionando, ejecutar:
 
     npm run seed
 
-Este comando ejecutará el script de carga de datos cuando se haya implementado.
+Este comando registra por la API 40 juguetes, 10 familias y 15 préstamos de demostración. En una segunda ejecución reconoce los registros creados. Los préstamos pendientes se podrán consultar como vencidos una vez transcurridos nueve días.
 
 ## 10. Precauciones
 
@@ -122,24 +122,7 @@ Los administradores podrán crear juguetes y los usuarios autenticados con permi
 
 ## 12. Estado del desarrollo
 
-Esta documentación describe el funcionamiento previsto.
-
-Archivos pendientes:
-
-- .env.example
-- package.json
-- seed-api.js
-
-Verificaciones pendientes:
-
-- Conexión con Laravel.
-- Autenticación del administrador.
-- Registro de datos de ejemplo.
-- Validación de respuestas HTTP.
-- Prevención de duplicados.
-- Pruebas de integración.
-
-La herramienta todavía no ha sido ejecutada.
+El sembrador se ejecutó contra la API de desarrollo y se repitió para comprobar que reconoce los datos existentes. Los resultados y las condiciones de las pruebas están en `../docs/evidencia-pruebas.md`.
 
 ## 13. Información académica
 

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 
 import {
   getCategories,
-  getToys,
-  getToyCoverUrl
+  getToys
 } from '../services/api.js';
+import ToyCover from '../components/ToyCover.jsx';
 
 function ToyCard({ toy }) {
   const [imageError, setImageError] = useState(false);
@@ -30,8 +30,8 @@ function ToyCard({ toy }) {
         }}
       >
         {toy.cover_key && !imageError ? (
-          <img
-            src={getToyCoverUrl(toy.id)}
+          <ToyCover
+            toy={toy}
             alt={`Imagen de ${toy.name}`}
             loading="lazy"
             onError={() => setImageError(true)}
@@ -172,13 +172,15 @@ export default function CatalogPage() {
         setToys(items);
 
         const currentPage = Number(
-          result?.meta?.current_page ??
+          result?.pagination?.page ??
+            result?.meta?.current_page ??
             result?.current_page ??
             page
         );
 
         const lastPage = Number(
-          result?.meta?.last_page ??
+          result?.pagination?.total_pages ??
+            result?.meta?.last_page ??
             result?.last_page ??
             currentPage
         );

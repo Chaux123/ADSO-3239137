@@ -6,7 +6,7 @@
 **Ficha:** 3239137  
 **Aprendiz:** A13  
 **Versión:** 1.0  
-**Estado:** Pendiente de implementación
+**Estado:** En verificación; consultar la matriz y las evidencias registradas.
 
 ## 1. Propósito
 
@@ -37,7 +37,7 @@ Para completar el proyecto se deberán cumplir las siguientes condiciones:
 13. Mantener los nombres técnicos en inglés y los mensajes para usuarios en español.
 14. Registrar evidencias verificables de las funcionalidades.
 
-Las tareas inicialmente tendrán estado **pendiente**.
+Las tareas se marcan como verificadas únicamente cuando se han ejecutado sus evidencias; las restantes permanecen pendientes de revisión.
 
 Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado correctamente su evidencia.
 
@@ -45,29 +45,29 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 
 | ID | Tarea | Estado |
 |---|---|---|
-| T-01 | Inicialización del proyecto y endpoint de salud | Pendiente |
-| T-02 | Migraciones y estructura de base de datos | Pendiente |
-| T-03 | Objetos de valor del dominio | Pendiente |
-| T-04 | Dominio de juguetes e inventario | Pendiente |
-| T-05 | Dominio de préstamos y vencimientos | Pendiente |
-| T-06 | Dominio de familias y promotores | Pendiente |
-| T-07 | Casos de uso de autenticación y promotores | Pendiente |
-| T-08 | Gestión del catálogo de juguetes | Pendiente |
-| T-09 | Registro de préstamos | Pendiente |
-| T-10 | Devoluciones y préstamos vencidos | Pendiente |
-| T-11 | Reporte de juguetes más solicitados | Pendiente |
-| T-12 | Persistencia de juguetes, familias y usuarios | Pendiente |
-| T-13 | Persistencia de préstamos y concurrencia | Pendiente |
-| T-14 | Seguridad, contraseñas y JWT | Pendiente |
-| T-15 | Gestión de imágenes de juguetes | Pendiente |
+| T-01 | Inicialización del proyecto y endpoint de salud | Verificada |
+| T-02 | Migraciones y estructura de base de datos | Verificada |
+| T-03 | Objetos de valor del dominio | Verificada |
+| T-04 | Dominio de juguetes e inventario | Verificada |
+| T-05 | Dominio de préstamos y vencimientos | Verificada |
+| T-06 | Dominio de familias y promotores | Verificada |
+| T-07 | Casos de uso de autenticación y promotores | Verificada |
+| T-08 | Gestión del catálogo de juguetes | Verificada |
+| T-09 | Registro de préstamos | Verificada |
+| T-10 | Devoluciones y préstamos vencidos | Verificada |
+| T-11 | Reporte de juguetes más solicitados | Verificada |
+| T-12 | Persistencia de juguetes, familias y usuarios | Verificada |
+| T-13 | Persistencia de préstamos y concurrencia | Verificada |
+| T-14 | Seguridad, contraseñas y JWT | Verificada |
+| T-15 | Gestión de imágenes de juguetes | Verificada |
 | T-16 | Contrato HTTP y autorización | Pendiente |
-| T-17 | Inicialización del administrador | Pendiente |
-| T-18 | Restricciones de integridad PostgreSQL | Pendiente |
+| T-17 | Inicialización del administrador | Verificada |
+| T-18 | Restricciones de integridad PostgreSQL | Verificada |
 | T-19 | Validación de la arquitectura | Pendiente |
-| T-20 | Infraestructura con Docker | Pendiente |
-| T-21 | Sembrador de datos mediante API | Pendiente |
-| T-22 | Aplicación frontend React | Pendiente |
-| T-23 | Página pública estática | Pendiente |
+| T-20 | Infraestructura con Docker | Verificada |
+| T-21 | Sembrador de datos mediante API | Verificada |
+| T-22 | Aplicación frontend React | Verificada |
+| T-23 | Página pública estática | Verificada |
 
 ## 4. Descripción y evidencia de las tareas
 
@@ -89,7 +89,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 **Evidencias:**
 
 - El backend inicia correctamente.
-- El endpoint `GET /health` responde HTTP 200.
+- El endpoint `GET /api/v1/health` responde HTTP 200.
 - La respuesta contiene:
 
 ```json
@@ -98,7 +98,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 }
 ```
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-02. Migraciones y estructura de base de datos
 
@@ -126,7 +126,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Las migraciones se ejecutan correctamente.
 - El comando `php artisan migrate:status` muestra las migraciones correspondientes.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-03. Objetos de valor del dominio
 
@@ -150,7 +150,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Las referencias se validan según la especificación.
 - Las pruebas unitarias se ejecutan correctamente.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-04. Dominio de juguetes e inventario
 
@@ -175,7 +175,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - No se permiten actualizaciones que incumplan las restricciones.
 - Las pruebas unitarias verifican estas condiciones.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-05. Dominio de préstamos y vencimientos
 
@@ -200,7 +200,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Las pruebas permiten controlar el tiempo mediante un reloj de prueba.
 - Los datos históricos de cada línea permanecen inmutables.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-06. Dominio de familias y promotores
 
@@ -224,7 +224,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - No se aceptan valores inválidos.
 - Las pruebas unitarias verifican las reglas del dominio.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-07. Casos de uso de autenticación y promotores
 
@@ -250,7 +250,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los datos inválidos devuelven HTTP 422.
 - Los usuarios duplicados generan el conflicto documentado.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-08. Gestión del catálogo de juguetes
 
@@ -278,7 +278,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los juguetes retirados no aparecen en las búsquedas activas.
 - Las pruebas comprueban las operaciones del catálogo.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-09. Registro de préstamos
 
@@ -307,7 +307,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los juguetes sin disponibilidad generan HTTP 409.
 - No se registran operaciones parciales.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-10. Devoluciones y préstamos vencidos
 
@@ -333,7 +333,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Una devolución duplicada genera HTTP 409.
 - Los datos históricos no se eliminan ni modifican indebidamente.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-11. Reporte de juguetes más solicitados
 
@@ -359,7 +359,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los intervalos inválidos se rechazan.
 - Las pruebas verifican los resultados.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-12. Persistencia de juguetes, familias y usuarios
 
@@ -384,7 +384,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los repositorios respetan las reglas de persistencia.
 - Las pruebas de integración se ejecutan con PostgreSQL.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-13. Persistencia de préstamos y concurrencia
 
@@ -410,7 +410,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Dos solicitudes simultáneas sobre la última unidad producen una respuesta HTTP 201 y otra HTTP 409.
 - La prueba de concurrencia se ejecuta utilizando PostgreSQL real.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-14. Seguridad, contraseñas y JWT
 
@@ -436,7 +436,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los tokens inválidos son rechazados.
 - Los usuarios sin permisos no pueden ejecutar operaciones restringidas.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-15. Gestión de imágenes de juguetes
 
@@ -462,7 +462,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Las imágenes se pueden consultar y reemplazar.
 - Las pruebas comprueban los límites establecidos.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-16. Contrato HTTP y autorización
 
@@ -513,7 +513,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - No existen credenciales reales publicadas.
 - El endpoint de creación de usuarios no permite registrar administradores adicionales.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-18. Restricciones de integridad PostgreSQL
 
@@ -539,7 +539,7 @@ Una tarea solamente podrá marcarse como verificada cuando se haya ejecutado cor
 - Los roles diferentes de `admin` y `promoter` son rechazados.
 - Las referencias duplicadas y relaciones inválidas son rechazadas según sus restricciones.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-19. Validación de arquitectura
 
@@ -597,7 +597,7 @@ También se comprobará que:
 - PostgreSQL mantiene la persistencia.
 - Los servicios pueden iniciarse de forma reproducible.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-21. Sembrador de datos mediante API
 
@@ -627,7 +627,7 @@ Los datos deberán registrarse mediante la API y no mediante inserciones SQL dir
 
 El conjunto de demostración deberá permitir verificar préstamos vencidos después de nueve días.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-22. Aplicación frontend React
 
@@ -659,7 +659,7 @@ El conjunto de demostración deberá permitir verificar préstamos vencidos desp
 - Los administradores pueden consultar el reporte.
 - Los errores y mensajes se presentan en español.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ### T-23. Página pública estática
 
@@ -684,7 +684,7 @@ El conjunto de demostración deberá permitir verificar préstamos vencidos desp
 - La página no depende de la API para mostrar su contenido.
 - La página no está dedicada a explicar la prueba técnica o el plan de mejoramiento.
 
-**Estado:** Pendiente.
+**Estado:** Verificada.
 
 ## 5. Matriz de dependencias
 
@@ -824,3 +824,7 @@ El cumplimiento académico requerirá además aprobar las dos revisiones y reali
 ---
 
 **Toy Library — Plan de 23 Tareas — Plan de Mejoramiento A13 — Ficha 3239137.**
+
+## 7. Evidencias de verificación
+
+Consultar [evidencia-pruebas.md](evidencia-pruebas.md) y [revision-23-tareas.md](revision-23-tareas.md). Las tareas pendientes requieren completar la revisión indicada en esa matriz.

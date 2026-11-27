@@ -9,6 +9,19 @@ import {
   returnLoanItem
 } from '../services/api.js';
 
+async function getAllPages(fetchPage) {
+  const result = [];
+  let page = 1;
+  let totalPages;
+  do {
+    const response = await fetchPage({ page, per_page: 100 });
+    result.push(...(response.data ?? []));
+    totalPages = response.pagination?.total_pages ?? page;
+    page++;
+  } while (page <= totalPages);
+  return result;
+}
+
 function formatDate(value) {
   if (!value) return 'Sin fecha';
 
@@ -56,9 +69,9 @@ export default function LoanPage() {
       try {
         const [familiesResult, toysResult, loansResult] =
           await Promise.all([
-            getFamilies(),
-            getToys(),
-            getLoans()
+            getAllPages(getFamilies),
+            getAllPages(getToys),
+            getAllPages(getLoans)
           ]);
 
         if (cancelled) return;
@@ -323,7 +336,7 @@ export default function LoanPage() {
                 </p>
 
                 <p>
-                  <strong>Familia:</strong> {loan.family_id}
+                  <strong>Familia:</strong> {families.find((family) => family.id === loan.family_id)?.full_name || loan.family_id}
                 </p>
 
                 <p>
@@ -333,7 +346,7 @@ export default function LoanPage() {
 
                 <p>
                   <strong>Estado:</strong>{' '}
-                  {loan.status || 'Sin información'}
+                  {({ open: 'En curso', overdue: 'Vencido', closed: 'Devuelto' })[loan.status] || 'Sin información'}
                 </p>
 
                 {Array.isArray(loan.items) &&
@@ -348,7 +361,7 @@ export default function LoanPage() {
                     >
                       <p>
                         <strong>Juguete:</strong>{' '}
-                        {item.toy_name || item.name}
+                        {item.snapshot?.toy_name || item.toy_name || item.name || 'Juguete'}
                       </p>
 
                       <p>

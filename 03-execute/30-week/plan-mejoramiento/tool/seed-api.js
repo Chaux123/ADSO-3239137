@@ -71,6 +71,14 @@ const SAMPLE_TOYS = [
   }
 ];
 
+// Generate repeatable demo records without bypassing the API.
+for (let i = 4; i <= 10; i++) {
+  SAMPLE_FAMILIES.push({ full_name: `Familia Prueba ${i}`, document_number: `TEST-FAMILY-${String(i).padStart(3, '0')}` });
+}
+const categoryNames = ['bebes', 'construccion', 'didacticos', 'exterior', 'simbolicos'];
+for (let i = 6; i <= 40; i++) {
+  SAMPLE_TOYS.push({ name: `Juguete de demostración ${i}`, brand: 'Toy Library', reference: `TEST-DEMO-${String(i).padStart(3, '0')}`, category: categoryNames[(i - 1) % 5], total_units: 3 });
+}
 function validateEnvironment() {
   if (!['development', 'test'].includes(SEED_ENV)) {
     throw new Error(
@@ -211,10 +219,10 @@ async function authenticate() {
   return response.access_token;
 }
 
-async function loadCategories() {
+async function loadCategories(token) {
   console.log('Consultando categorías...');
 
-  const response = await apiRequest('/categories');
+  const response = await apiRequest('/categories', { token });
 
   const categories = Array.isArray(response)
     ? response
@@ -351,6 +359,23 @@ async function seedToys(token, categoryMap) {
   return { created, existing };
 }
 
+async function seedLoans(token) {
+  const families = (await apiRequest('/families?per_page=100&q=TEST-FAMILY-', { token })).data;
+  const toys = (await apiRequest('/toys?per_page=100&q=Toy%20Library', { token })).data;
+  let created = 0;
+  for (let i = 0; i < 15; i++) {
+    const familySpec = SAMPLE_FAMILIES[i % SAMPLE_FAMILIES.length];
+    const toySpec = SAMPLE_TOYS[i];
+    const family = families.find(item => item.document_number === familySpec.document_number);
+    const toy = toys.find(item => item.reference === toySpec.reference);
+    if (!family || !toy) throw new Error(`No se encontró el registro de demostración ${i + 1}.`);
+    const loans = (await apiRequest(`/loans?per_page=100&family_id=${family.id}`, { token })).data;
+    if (loans.some(loan => loan.items.some(item => item.toy_id === toy.id))) continue;
+    await apiRequest('/loans', { method: 'POST', token, body: { family_id: family.id, toy_ids: [toy.id] } });
+    created++;
+  }
+  console.log(`Préstamos creados: ${created}; objetivo: 15.`);
+}
 async function main() {
   console.log('===================================');
   console.log(' TOY LIBRARY - DEVELOPMENT SEED');
@@ -362,7 +387,7 @@ async function main() {
 
   const token = await authenticate();
 
-  const categoryMap = await loadCategories();
+  const categoryMap = await loadCategories(token);
 
   const familyResults = await seedFamilies(token);
 
@@ -370,6 +395,8 @@ async function main() {
     token,
     categoryMap
   );
+
+  await seedLoans(token);
 
   console.log('\n===================================');
   console.log(' RESUMEN DE CARGA');

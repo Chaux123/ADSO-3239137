@@ -9,6 +9,8 @@ export default function ReportPage() {
 
   const [report, setReport] = useState([]);
   const [limit, setLimit] = useState(10);
+  const [from, setFrom] = useState('2000-01-01');
+  const [to, setTo] = useState(() => new Date().toISOString().slice(0, 10));
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,7 +29,7 @@ export default function ReportPage() {
       setError('');
 
       try {
-        const response = await getMostLoanedReport(limit);
+        const response = await getMostLoanedReport(limit, from, to);
 
         if (cancelled) return;
 
@@ -56,7 +58,7 @@ export default function ReportPage() {
     return () => {
       cancelled = true;
     };
-  }, [isAdmin, limit, refreshKey]);
+  }, [isAdmin, limit, from, to, refreshKey]);
 
   if (!isAdmin) {
     return (
@@ -132,6 +134,8 @@ export default function ReportPage() {
             </select>
           </div>
 
+          <div className="form-group"><label htmlFor="report-from">Desde</label><input id="report-from" type="date" value={from} max={to} onChange={(event) => setFrom(event.target.value)} /></div>
+          <div className="form-group"><label htmlFor="report-to">Hasta</label><input id="report-to" type="date" value={to} min={from} onChange={(event) => setTo(event.target.value)} /></div>
           <button
             type="button"
             className="btn btn-primary"
