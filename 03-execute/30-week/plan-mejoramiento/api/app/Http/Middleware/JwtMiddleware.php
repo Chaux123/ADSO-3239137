@@ -1,19 +1,20 @@
-
 <?php
 
 namespace App\Http\Middleware;
 
 use App\Exceptions\ApiException;
+use App\Adapters\PromoterRepository;
 use App\Support\JwtService;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 use Throwable;
 
 final class JwtMiddleware
 {
     public function __construct(
-        private JwtService $jwt
+        private JwtService $jwt,
+        private PromoterRepository $promoters
     ) {
     }
 
@@ -51,9 +52,7 @@ final class JwtMiddleware
             );
         }
 
-        $promoter = DB::table('promoters')
-            ->where('id', $promoterId)
-            ->first();
+        $promoter = $this->promoters->findById($promoterId);
 
         if (!$promoter) {
             throw new ApiException(

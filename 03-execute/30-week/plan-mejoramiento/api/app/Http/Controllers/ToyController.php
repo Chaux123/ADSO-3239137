@@ -1,41 +1,27 @@
-
 <?php
 
 namespace App\Http\Controllers;
 
 use App\Domain\Reference;
+use App\Adapters\ToyRepository;
 use App\Domain\ToyRules;
 use App\Exceptions\ApiException;
 use App\Support\JsonData;
 use App\Support\Presenters;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 final class ToyController extends BaseController
 {
-    private function query()
-    {
-        return DB::table('toys')
-            ->join(
-                'categories',
-                'categories.id',
-                '=',
-                'toys.category_id'
-            )
-            ->whereNull('toys.deleted_at')
-            ->select(
-                'toys.*',
-                'categories.name as category_name'
-            );
-    }
+    public function __construct(private ToyRepository $toys) {}
 
     private function find(string $id)
     {
-        $toy = $this->query()
+        $toy = $this->toys->activeQuery()
             ->where('toys.id', $id)
             ->first();
 
@@ -54,9 +40,7 @@ final class ToyController extends BaseController
     public function categories()
     {
         return response()->json(
-            DB::table('categories')
-                ->orderBy('name')
-                ->get()
+            $this->toys->categories()
         );
     }
 
@@ -68,7 +52,7 @@ final class ToyController extends BaseController
             'category_id' => 'sometimes|uuid',
         ]);
 
-        $query = $this->query();
+        $query = $this->toys->activeQuery();
 
         if (!empty($data['q'])) {
             $term = '%' . $data['q'] . '%';
@@ -136,10 +120,7 @@ final class ToyController extends BaseController
             );
         }
 
-        $exists = DB::table('toys')
-            ->where('reference', $reference)
-            ->whereNull('deleted_at')
-            ->exists();
+        $exists = $this->toys->referenceExists($reference);
 
         if ($exists) {
             throw new ApiException(
@@ -152,7 +133,7 @@ final class ToyController extends BaseController
         $id = (string) Str::uuid();
 
         try {
-            DB::table('toys')->insert([
+            $this->toys->insert([
                 'id' => $id,
                 'name' => trim($data['name']),
                 'brand' => trim($data['brand']),
@@ -193,12 +174,8 @@ final class ToyController extends BaseController
             'total_units' => 'required|integer|min:1',
         ]);
 
-        DB::transaction(function () use ($id, $data) {
-            $toy = DB::table('toys')
-                ->where('id', $id)
-                ->whereNull('deleted_at')
-                ->lockForUpdate()
-                ->first();
+        $this->toys->transaction(function () use ($id, $data) {
+            $toy = $this->toys->lockActive($id);
 
             if (!$toy) {
                 throw new ApiException(
@@ -222,9 +199,7 @@ final class ToyController extends BaseController
                 );
             }
 
-            DB::table('toys')
-                ->where('id', $id)
-                ->update([
+            $this->toys->update($id, [
                     'name' => trim($data['name']),
                     'brand' => trim($data['brand']),
                     'category_id' => $data['category_id'],
@@ -243,12 +218,8 @@ final class ToyController extends BaseController
     {
         $this->admin($request);
 
-        DB::transaction(function () use ($id) {
-            $toy = DB::table('toys')
-                ->where('id', $id)
-                ->whereNull('deleted_at')
-                ->lockForUpdate()
-                ->first();
+        $this->toys->transaction(function () use ($id) {
+            $toy = $this->toys->lockActive($id);
 
             if (!$toy) {
                 throw new ApiException(
@@ -258,10 +229,7 @@ final class ToyController extends BaseController
                 );
             }
 
-            $hasOpenLoans = DB::table('loan_items')
-                ->where('toy_id', $id)
-                ->whereNull('returned_at')
-                ->exists();
+            $hasOpenLoans = $this->toys->hasOpenLoans($id);
 
             if ($hasOpenLoans) {
                 throw new ApiException(
@@ -271,9 +239,7 @@ final class ToyController extends BaseController
                 );
             }
 
-            DB::table('toys')
-                ->where('id', $id)
-                ->update([
+            $this->toys->update($id, [
                     'deleted_at' => now('UTC'),
                 ]);
         });
@@ -310,13 +276,9 @@ final class ToyController extends BaseController
             file_get_contents($file->getRealPath())
         );
 
-        $oldKey = DB::table('toys')
-            ->where('id', $id)
-            ->value('cover_key');
+        $oldKey = $this->toys->coverKey($id);
 
-        DB::table('toys')
-            ->where('id', $id)
-            ->update([
+        $this->toys->update($id, [
                 'cover_key' => $key,
             ]);
 
@@ -370,9 +332,7 @@ final class ToyController extends BaseController
 
         $toy = $this->find($id);
 
-        DB::table('toys')
-            ->where('id', $id)
-            ->update([
+        $this->toys->update($id, [
                 'cover_key' => null,
             ]);
 

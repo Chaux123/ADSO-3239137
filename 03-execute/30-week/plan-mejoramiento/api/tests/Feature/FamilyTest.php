@@ -174,7 +174,7 @@ final class FamilyTest extends TestCase
 
         $query->shouldReceive('where')
             ->once()
-            ->with('id', 'nonexistent-family')
+            ->with('id', '00000000-0000-4000-8000-000000000001')
             ->andReturnSelf();
 
         $query->shouldReceive('first')
@@ -187,7 +187,7 @@ final class FamilyTest extends TestCase
             ->andReturn($query);
 
         $response = $this->getJson(
-            '/api/v1/families/nonexistent-family'
+            '/api/v1/families/00000000-0000-4000-8000-000000000001'
         );
 
         $response->assertStatus(404);

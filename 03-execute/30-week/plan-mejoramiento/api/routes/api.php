@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -9,6 +8,11 @@ use App\Http\Controllers\ToyController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\ReportController;
+
+// Reject malformed identifiers before PostgreSQL attempts to cast them to UUID.
+foreach (['id', 'loanId', 'itemId'] as $parameter) {
+    Route::pattern($parameter, '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}');
+}
 
 // Health check
 Route::get('/health', function () {
@@ -23,7 +27,8 @@ Route::post('/auth/login', [
     'login',
 ]);
 
-// Public catalog
+// Catalog reads require authentication as specified by the API contract.
+Route::middleware('jwt')->group(function () {
 Route::get('/categories', [
     ToyController::class,
     'categories',
@@ -43,6 +48,7 @@ Route::get('/toys/{id}/cover', [
     ToyController::class,
     'cover',
 ]);
+});
 
 // Protected routes
 Route::middleware('jwt')->group(function () {
@@ -101,6 +107,10 @@ Route::middleware('jwt')->group(function () {
         'index',
     ]);
 
+    Route::get('/loans/overdue', [
+        LoanController::class,
+        'overdue',
+    ]);
     Route::get('/loans/{id}', [
         LoanController::class,
         'show',

@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Domain;
@@ -53,24 +52,13 @@ final class LoanRules
         array $items,
         DateTimeImmutable $now
     ): string {
-        $pendingItems = array_filter(
-            $items,
-            fn (array $item): bool =>
-                $item['returned_at'] === null
+        $loanItems = array_map(
+            fn (array $item): LoanItem => new LoanItem(
+                new DateTimeImmutable($item['due_at']),
+                $item['returned_at'] === null ? null : new DateTimeImmutable($item['returned_at'])
+            ),
+            $items
         );
-
-        if (count($pendingItems) === 0) {
-            return 'closed';
-        }
-
-        foreach ($pendingItems as $item) {
-            $dueAt = new DateTimeImmutable($item['due_at']);
-
-            if ($dueAt < $now) {
-                return 'overdue';
-            }
-        }
-
-        return 'open';
+        return (new Loan($loanItems))->status($now);
     }
 }

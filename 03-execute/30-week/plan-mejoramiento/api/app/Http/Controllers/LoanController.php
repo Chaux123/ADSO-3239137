@@ -1,97 +1,67 @@
-
 <?php
 
 namespace App\Http\Controllers;
 
 use App\Application\LoanUseCase;
+use App\Adapters\LoanReadRepository;
 use App\Application\ReturnUseCase;
 use App\Exceptions\ApiException;
 use App\Support\JsonData;
 use App\Support\Presenters;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 final class LoanController extends BaseController
 {
+    public function __construct(private LoanReadRepository $loans) {}
+
     // GET /api/v1/loans
     public function index(Request $request): JsonResponse
     {
         $data = $request->validate([
             'family_id' => ['sometimes', 'uuid'],
+            'from' => ['sometimes', 'date_format:Y-m-d'],
+            'to' => ['sometimes', 'date_format:Y-m-d', 'after_or_equal:from'],
             'status' => [
                 'sometimes',
-                'in:active,overdue,returned'
+                'in:open,overdue,closed,active,returned'
             ],
         ]);
 
-        $query = DB::table('loans')
-            ->orderByDesc('loaned_at')
-            ->orderBy('id');
-
-        if (!empty($data['family_id'])) {
-            $query->where(
-                'loans.family_id',
-                $data['family_id']
-            );
-        }
-
-        // Filter loan status before pagination.
-        if (!empty($data['status'])) {
-            $now = now('UTC');
-            $status = $data['status'];
-
-            $hasPendingItems = function ($query) {
-                $query->selectRaw('1')
-                    ->from('loan_items')
-                    ->whereColumn(
-                        'loan_items.loan_id',
-                        'loans.id'
-                    )
-                    ->whereNull('loan_items.returned_at');
-            };
-
-            $hasOverdueItems = function ($query) use ($now) {
-                $query->selectRaw('1')
-                    ->from('loan_items')
-                    ->whereColumn(
-                        'loan_items.loan_id',
-                        'loans.id'
-                    )
-                    ->whereNull('loan_items.returned_at')
-                    ->where('loan_items.due_at', '<', $now);
-            };
-
-            if ($status === 'returned') {
-                // Every toy in the loan was returned.
-                $query->whereNotExists($hasPendingItems);
-
-            } elseif ($status === 'overdue') {
-                // At least one unreturned toy is overdue.
-                $query->whereExists($hasOverdueItems);
-
-            } elseif ($status === 'active') {
-                // There are pending toys, but none overdue.
-                $query->whereExists($hasPendingItems)
-                    ->whereNotExists($hasOverdueItems);
-            }
-        }
+        $query = $this->loans->search($data);
 
         $result = JsonData::paged(
             $query,
             $request,
-            fn ($loan) => Presenters::loan($loan)
+            fn ($loan) => Presenters::loan($loan, $this->loans->items($loan->id))
         );
 
         return response()->json($result);
     }
 
+    // GET /api/v1/loans/overdue
+    public function overdue(): JsonResponse
+    {
+        $now = now('UTC');
+        $items = $this->loans->overdue($now)
+            ->map(function ($item) use ($now) {
+                $due = \Carbon\CarbonImmutable::parse($item->due_at, 'UTC');
+                return [
+                    'loan_id' => $item->loan_id,
+                    'loan_item_id' => $item->loan_item_id,
+                    'family_id' => $item->family_id,
+                    'toy_name' => $item->toy_name,
+                    'due_at' => $due->toISOString(),
+                    'days_late' => (int) floor($due->diffInDays($now)),
+                ];
+            });
+        return response()->json($items);
+    }
     // GET /api/v1/loans/{id}
     public function show(string $id): JsonResponse
     {
-        $loan = DB::table('loans')
-            ->where('id', $id)
-            ->first();
+        $loan = $this->loans->find($id);
 
         if (!$loan) {
             throw new ApiException(
@@ -102,7 +72,7 @@ final class LoanController extends BaseController
         }
 
         return response()->json(
-            Presenters::loan($loan)
+            Presenters::loan($loan, $this->loans->items($loan->id))
         );
     }
 
@@ -111,6 +81,9 @@ final class LoanController extends BaseController
         Request $request,
         LoanUseCase $useCase
     ): JsonResponse {
+        if (!$request->has('toy_ids') && is_array($request->input('items'))) {
+            $request->merge(['toy_ids' => array_map(fn ($item) => is_array($item) ? ($item['toy_id'] ?? null) : null, $request->input('items'))]);
+        }
         $data = $request->validate([
             'family_id' => ['required', 'uuid'],
             'toy_ids' => [

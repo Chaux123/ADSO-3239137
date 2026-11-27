@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Adapters;
@@ -7,7 +6,6 @@ use App\Ports\LoanPort;
 use App\Domain\LoanRules;
 use App\Exceptions\ApiException;
 use App\Support\Presenters;
-use App\Support\JsonData;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -176,7 +174,7 @@ final class DatabaseLoanAdapter implements LoanPort
                 ->where('id', $loanId)
                 ->first();
 
-            return Presenters::loan($loan);
+            return Presenters::loan($loan, DB::table('loan_items')->where('loan_id', $loan->id)->orderBy('id')->get());
 
         }, 3);
     }
@@ -271,7 +269,7 @@ final class DatabaseLoanAdapter implements LoanPort
                 'id' => $item->id,
                 'loan_id' => $loanId,
                 'toy_id' => $item->toy_id,
-                'returned_at' => JsonData::utc((string) $now)
+                'returned_at' => $now->toISOString()
             ];
 
         }, 3);

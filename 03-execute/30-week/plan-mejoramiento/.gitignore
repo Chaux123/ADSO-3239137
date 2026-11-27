@@ -87,3 +87,6 @@ venv/
 # page/
 # infra/
 # tool/
+
+# Keep the frontend dependency lock for reproducible installs
+!app/package-lock.json

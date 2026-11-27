@@ -1,10 +1,10 @@
-
 <?php
 
 namespace App\Support;
 
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
+use App\Domain\LoanRules;
+use Illuminate\Support\Collection;
 
 final class Presenters
 {
@@ -18,6 +18,7 @@ final class Presenters
             'name' => (string) $toy->name,
             'brand' => (string) $toy->brand,
             'reference' => (string) $toy->reference,
+            'category' => ['id' => (string) $toy->category_id, 'name' => $toy->category_name ?? null],
             'category_id' => (string) $toy->category_id,
             'category_name' => $toy->category_name ?? null,
             'total_units' => (int) $toy->total_units,
@@ -29,45 +30,22 @@ final class Presenters
     /**
      * Format loan data and its historical toy snapshots.
      */
-    public static function loan(object $loan): array
+    public static function loan(object $loan, Collection $items): array
     {
-        $items = DB::table('loan_items')
-            ->where('loan_id', $loan->id)
-            ->orderBy('id')
-            ->get();
-
-        $now = CarbonImmutable::now('UTC');
-
-        $allReturned = $items->isNotEmpty()
-            && $items->every(
-                fn ($item) => $item->returned_at !== null
-            );
-
-        $hasOverdue = $items->contains(
-            function ($item) use ($now): bool {
-                return $item->returned_at === null
-                    && CarbonImmutable::parse(
-                        $item->due_at,
-                        'UTC'
-                    )->lessThan($now);
-            }
+        $status = LoanRules::status(
+            $items->map(fn ($item) => ['due_at' => $item->due_at, 'returned_at' => $item->returned_at])->all(),
+            CarbonImmutable::now('UTC')->toDateTimeImmutable()
         );
-
-        if ($allReturned) {
-            $status = 'returned';
-        } elseif ($hasOverdue) {
-            $status = 'overdue';
-        } else {
-            $status = 'active';
-        }
-
         $formattedItems = $items->map(
             function ($item): array {
                 return [
                     'id' => (string) $item->id,
                     'toy_id' => (string) $item->toy_id,
-                    'due_at' => $item->due_at,
-                    'returned_at' => $item->returned_at,
+                    'toy_name' => $item->toy_name,
+                    'reference' => $item->reference,
+                    'category_name' => $item->category_name,
+                    'due_at' => CarbonImmutable::parse($item->due_at, 'UTC')->toISOString(),
+                    'returned_at' => $item->returned_at === null ? null : CarbonImmutable::parse($item->returned_at, 'UTC')->toISOString(),
                     'snapshot' => [
                         'toy_name' => $item->toy_name,
                         'reference' => $item->reference,
@@ -81,7 +59,7 @@ final class Presenters
             'id' => (string) $loan->id,
             'family_id' => (string) $loan->family_id,
             'promoter_id' => (string) $loan->loaned_by_promoter_id,
-            'loaned_at' => $loan->loaned_at,
+            'loaned_at' => CarbonImmutable::parse($loan->loaned_at, 'UTC')->toISOString(),
             'status' => $status,
             'items' => $formattedItems,
         ];

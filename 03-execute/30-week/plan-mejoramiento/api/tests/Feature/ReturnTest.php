@@ -12,7 +12,7 @@ final class ReturnTest extends TestCase
     public function test_cannot_return_toy_without_authentication(): void
     {
         $response = $this->postJson(
-            '/api/v1/loans/loan-1/items/item-1/return'
+            '/api/v1/loans/00000000-0000-4000-8000-000000000001/items/00000000-0000-4000-8000-000000000002/return'
         );
 
         $response->assertStatus(401);

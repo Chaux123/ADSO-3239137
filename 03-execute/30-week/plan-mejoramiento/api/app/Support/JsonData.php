@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Support;
@@ -22,6 +21,7 @@ final class JsonData
                 'integer',
                 'min:1'
             ],
+            'size' => ['sometimes', 'integer', 'min:1', 'max:30'],
             'per_page' => [
                 'sometimes',
                 'integer',
@@ -31,7 +31,7 @@ final class JsonData
         ]);
 
         $page = (int) ($data['page'] ?? 1);
-        $perPage = (int) ($data['per_page'] ?? 10);
+        $perPage = (int) ($data['size'] ?? $data['per_page'] ?? 20);
 
         $total = (clone $query)->count();
 
@@ -46,6 +46,10 @@ final class JsonData
             ->all();
 
         return [
+            'items' => $items,
+            'page' => $page,
+            'size' => $perPage,
+            'total' => $total,
             'data' => $items,
             'pagination' => [
                 'page' => $page,

@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Domain;
@@ -12,26 +11,7 @@ final class ToyRules
         int $available,
         int $newTotal
     ): int {
-        if (
-            $oldTotal < 1 ||
-            $available < 0 ||
-            $available > $oldTotal ||
-            $newTotal < 1
-        ) {
-            throw new InvalidArgumentException(
-                'Las cantidades del inventario son inválidas.'
-            );
-        }
-
-        $newAvailable = $available + $newTotal - $oldTotal;
-
-        if ($newAvailable < 0) {
-            throw new InvalidArgumentException(
-                'La cantidad total no permite cubrir los préstamos activos.'
-            );
-        }
-
-        return $newAvailable;
+        return (new Toy(new Quantity($oldTotal, $available)))->availableAfterTotalChange($newTotal);
     }
 
     public static function withdraw(int $available): int
