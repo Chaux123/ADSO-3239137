@@ -520,19 +520,16 @@ export default function ToyManagementPage({ editMode = false }) {
                   className="card toy-inventory-card"
                   key={toy.id}
                 >
-                  {toy.cover_key && (
-                    <ToyCover
-                      toy={toy}
-                      alt={`Imagen de ${toy.name}`}
-                      loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: '160px',
-                        objectFit: 'cover',
-                        borderRadius: '8px'
-                      }}
-                    />
-                  )}
+                  <div className="toy-card-image">
+                    <span aria-hidden="true">🧸</span>
+                    {toy.cover_key && (
+                      <ToyCover
+                        toy={toy}
+                        alt={`Imagen de ${toy.name}`}
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
 
                   <h4>{toy.name}</h4>
 
@@ -552,7 +549,7 @@ export default function ToyManagementPage({ editMode = false }) {
 
                   {editMode && <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-secondary toy-card-action"
                     onClick={() => startEditing(toy)}
                     disabled={processingId === toy.id}
                   >
@@ -561,7 +558,7 @@ export default function ToyManagementPage({ editMode = false }) {
 
                   {!editMode && <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-secondary toy-card-action"
                     onClick={() => handleDelete(toy)}
                     disabled={processingId === toy.id}
                   >
