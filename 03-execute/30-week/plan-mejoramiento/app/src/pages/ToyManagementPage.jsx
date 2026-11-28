@@ -30,6 +30,7 @@ export default function ToyManagementPage({ editMode = false }) {
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [editingId, setEditingId] = useState(null);
+  const [expandedToyId, setExpandedToyId] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -550,7 +551,9 @@ export default function ToyManagementPage({ editMode = false }) {
                   {editMode && <div className="toy-card-actions"><button
                     type="button"
                     className="btn btn-secondary toy-card-action"
-                    onClick={() => startEditing(toy)}
+                    aria-expanded={expandedToyId === toy.id}
+                    aria-controls={`toy-edit-menu-${toy.id}`}
+                    onClick={() => setExpandedToyId((current) => current === toy.id ? null : toy.id)}
                     disabled={processingId === toy.id}
                   >
                     Editar
@@ -565,10 +568,11 @@ export default function ToyManagementPage({ editMode = false }) {
                     Retirar
                   </button></div>}
 
-                  {editMode && <div
-                    className="form-group"
-                    style={{ marginTop: '16px' }}
-                  >
+                  {editMode && <div id={`toy-edit-menu-${toy.id}`} className="toy-edit-menu" hidden={expandedToyId !== toy.id}>
+                    <button type="button" className="btn btn-secondary toy-edit-info" onClick={() => startEditing(toy)} disabled={processingId === toy.id}>
+                      Editar información
+                    </button>
+                    <div className="form-group">
                     <label htmlFor={`cover-${toy.id}`}>
                       Subir fotografía
                     </label>
@@ -586,9 +590,9 @@ export default function ToyManagementPage({ editMode = false }) {
                         event.target.value = '';
                       }}
                     />
-                  </div>}
+                    </div>
 
-                  {editMode && toy.cover_key && (
+                  {toy.cover_key && (
                     <button
                       type="button"
                       className="btn btn-secondary"
@@ -600,6 +604,7 @@ export default function ToyManagementPage({ editMode = false }) {
                       Eliminar fotografía
                     </button>
                   )}
+                  </div>}
                 </article>
               ))}
             </div>

@@ -630,3 +630,12 @@ button:disabled {
   gap: 8px;
   margin-top: auto;
 }
+.toy-edit-menu:not([hidden]) {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #edecf5;
+}
+.toy-edit-menu .toy-edit-info { justify-self: start; margin-top: 0; }
+.toy-edit-menu .btn { margin-top: 0; }
