@@ -6,6 +6,7 @@ import {
   Routes,
   useNavigate
 } from 'react-router-dom';
+import { useState } from 'react';
 
 import LoginPage from './pages/LoginPage.jsx';
 import CatalogPage from './pages/CatalogPage.jsx';
@@ -38,6 +39,7 @@ function TemporaryPage({ title, description }) {
 
 export default function App() {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const {
     isAuthenticated,
@@ -87,8 +89,13 @@ export default function App() {
         <div className="brand-lockup"><span className="brand-icon" aria-hidden="true">✦</span><div><h1>Toy Library</h1>
         <p>Jugar nos une</p></div></div>
 
+        <button type="button" className="menu-toggle" aria-expanded={menuOpen} aria-controls="main-navigation" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? 'Cerrar menú' : 'Menú'}
+        </button>
+
         <nav
-          className="main-nav"
+          id="main-navigation"
+          className={`main-nav${menuOpen ? ' is-open' : ''}`}
           aria-label="Navegación principal"
         >
           {links.map((link) => (
@@ -96,6 +103,7 @@ export default function App() {
               key={link.to}
               to={link.to}
               end={link.end}
+              onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 isActive
                   ? 'nav-link active'
@@ -110,13 +118,14 @@ export default function App() {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={handleLogout}
+              onClick={() => { setMenuOpen(false); handleLogout(); }}
             >
               Cerrar sesión
             </button>
           ) : (
             <NavLink
               to="/login"
+              onClick={() => setMenuOpen(false)}
               className={({ isActive }) =>
                 isActive
                   ? 'nav-link active'
