@@ -57,7 +57,7 @@ final class JwtService
     ): string {
         if (
             $promoterId === '' ||
-            !in_array($role, ['admin', 'promoter'], true)
+            !in_array($role, ['admin', 'promoter', 'customer'], true)
         ) {
             throw new RuntimeException(
                 'Datos de autenticación inválidos.'
@@ -166,7 +166,7 @@ final class JwtService
             $payload['sub'] === '' ||
             !in_array(
                 $payload['role'],
-                ['admin', 'promoter'],
+                ['admin', 'promoter', 'customer'],
                 true
             ) ||
             !is_int($payload['iat']) ||

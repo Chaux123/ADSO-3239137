@@ -47,8 +47,7 @@ export default function LoginPage() {
         <h2>Iniciar sesión</h2>
 
         <p>
-          Ingresa con tu cuenta de administrador
-          o promotor de Toy Library.
+          Ingresa con tu cuenta de Toy Library.
         </p>
 
         {validationError && (

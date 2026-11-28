@@ -5,13 +5,15 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 export default function ProtectedRoute({
   children,
-  adminOnly = false
+  adminOnly = false,
+  staffOnly = false
 }) {
   const location = useLocation();
 
   const {
     isAuthenticated,
-    isAdmin
+    isAdmin,
+    isPromoter
   } = useAuth();
 
   // Redirect users who have not signed in.
@@ -26,7 +28,7 @@ export default function ProtectedRoute({
   }
 
   // Restrict administrator-only pages.
-  if (adminOnly && !isAdmin) {
+  if ((adminOnly && !isAdmin) || (staffOnly && !isAdmin && !isPromoter)) {
     return (
       <section className="page-content">
         <h2>Acceso denegado</h2>
@@ -36,8 +38,9 @@ export default function ProtectedRoute({
         </div>
 
         <p>
-          Esta función está disponible únicamente
-          para los administradores de Toy Library.
+          {adminOnly
+            ? 'Esta función está disponible únicamente para los administradores de Toy Library.'
+            : 'Esta función está disponible para administradores y promotores de Toy Library.'}
         </p>
       </section>
     );

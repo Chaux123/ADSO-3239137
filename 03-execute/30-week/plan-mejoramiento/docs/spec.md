@@ -54,6 +54,10 @@ Sus funciones son:
 
 No tendrá permisos para administrar promotores, modificar el catálogo ni consultar reportes administrativos.
 
+### 2.2.1. Cliente (`customer`)
+
+Extensión solicitada posteriormente: un administrador puede crear una cuenta de cliente. El cliente autenticado puede consultar el catálogo, las categorías y la disponibilidad, sin acceso a familias, préstamos, reportes ni operaciones administrativas. La cuenta de cliente no se vincula automáticamente con una familia.
+
 ### 2.3. Familia (`family`)
 
 Representa a las familias beneficiarias del servicio comunitario.

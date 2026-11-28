@@ -91,10 +91,11 @@ Los demás requerirán autenticación y los permisos correspondientes.
 
 ## 3. Roles y permisos
 
-El sistema contará con dos roles autenticados:
+El sistema contará con tres roles autenticados (el cliente es una extensión posterior solicitada por el usuario):
 
 - `admin`: administrador.
 - `promoter`: promotor.
+- `customer`: cliente de consulta del catálogo.
 
 Las familias serán registros de beneficiarios y no iniciarán sesión.
 
@@ -119,6 +120,8 @@ Las familias serán registros de beneficiarios y no iniciarán sesión.
 | Consultar reportes | Sí | No |
 
 Cuando un usuario autenticado intente acceder a una operación sin permisos, la API devolverá HTTP 403.
+
+El cliente puede iniciar sesión y consultar categorías, juguetes y sus imágenes. No puede registrar usuarios, modificar juguetes, consultar familias o préstamos, efectuar devoluciones ni consultar reportes; esas operaciones responden HTTP 403.
 
 ## 4. Códigos HTTP
 
@@ -287,7 +290,7 @@ El token tendrá una duración de ocho horas.
 - El nombre de usuario será obligatorio.
 - Se normalizará a minúsculas y se eliminarán espacios extremos.
 - No podrá existir otro usuario con el mismo nombre.
-- El único rol que podrá crearse mediante este endpoint será `promoter`.
+- El administrador puede crear usuarios con rol `promoter` o `customer`; no puede crear otro administrador mediante este endpoint.
 - La contraseña deberá almacenarse mediante hash seguro.
 - No se devolverán contraseñas ni hashes.
 

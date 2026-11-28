@@ -50,8 +50,8 @@ Route::get('/toys/{id}/cover', [
 ]);
 });
 
-// Protected routes
-Route::middleware('jwt')->group(function () {
+// Administrative and operational routes require a staff role.
+Route::middleware(['jwt', 'staff'])->group(function () {
 
     // Promoters
     Route::post('/users', [

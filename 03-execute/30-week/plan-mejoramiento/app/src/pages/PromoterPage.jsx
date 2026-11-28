@@ -10,7 +10,7 @@ const INITIAL_FORM = {
   confirmPassword: ''
 };
 
-export default function PromoterPage() {
+export default function PromoterPage({ customerMode = false }) {
   const { isAdmin } = useAuth();
 
   const [form, setForm] = useState(INITIAL_FORM);
@@ -61,11 +61,11 @@ export default function PromoterPage() {
       const response = await createPromoter({
         username,
         password: form.password,
-        role: 'promoter'
+        role: customerMode ? 'customer' : 'promoter'
       });
 
       setSuccess(
-        `El promotor "${response.username || username}" fue registrado correctamente.`
+        `El ${customerMode ? 'cliente' : 'promotor'} "${response.username || username}" fue registrado correctamente.`
       );
 
       setForm(INITIAL_FORM);
@@ -115,12 +115,10 @@ export default function PromoterPage() {
           margin: '0 auto'
         }}
       >
-        <h2>Administración de promotores</h2>
+        <h2>Administración de {customerMode ? 'clientes' : 'promotores'}</h2>
 
         <p>
-          Registra nuevos promotores para que puedan
-          gestionar familias, préstamos y devoluciones
-          de juguetes.
+          {customerMode ? 'Registra clientes para que puedan consultar el catálogo y la disponibilidad.' : 'Registra promotores para gestionar familias, préstamos y devoluciones de juguetes.'}
         </p>
 
         {error && (
@@ -142,7 +140,7 @@ export default function PromoterPage() {
         )}
 
         <div className="card">
-          <h3>Registrar nuevo promotor</h3>
+          <h3>Registrar nuevo {customerMode ? 'cliente' : 'promotor'}</h3>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
@@ -236,13 +234,11 @@ export default function PromoterPage() {
               }}
             >
               <p style={{ margin: 0 }}>
-                <strong>Rol asignado:</strong> Promotor
+                <strong>Rol asignado:</strong> {customerMode ? 'Cliente' : 'Promotor'}
               </p>
 
               <small>
-                Este usuario podrá gestionar familias
-                y préstamos, pero no tendrá permisos
-                de administrador.
+                {customerMode ? 'Este usuario podrá consultar el catálogo y la disponibilidad.' : 'Este usuario podrá gestionar familias y préstamos, pero no tendrá permisos de administrador.'}
               </small>
             </div>
 
@@ -254,7 +250,7 @@ export default function PromoterPage() {
             >
               {saving
                 ? 'Registrando...'
-                : 'Registrar promotor'}
+                : `Registrar ${customerMode ? 'cliente' : 'promotor'}`}
             </button>
           </form>
         </div>

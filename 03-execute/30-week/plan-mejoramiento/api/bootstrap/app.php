@@ -20,6 +20,7 @@ return Application::configure(
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'jwt' => JwtMiddleware::class,
+            'staff' => \App\Http\Middleware\StaffMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

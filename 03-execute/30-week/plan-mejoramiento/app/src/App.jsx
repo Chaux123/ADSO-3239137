@@ -44,6 +44,7 @@ export default function App() {
   const {
     isAuthenticated,
     isAdmin,
+    isPromoter,
     role,
     signOut
   } = useAuth();
@@ -58,7 +59,11 @@ export default function App() {
 
     ...(isAuthenticated
       ? [
-          { to: '/catalogo', label: 'Catálogo' },
+          { to: '/catalogo', label: 'Catálogo' }
+        ]
+      : []),
+    ...(isAdmin || isPromoter
+      ? [
           { to: '/familias', label: 'Familias' },
           { to: '/prestamos', label: 'Préstamos' }
         ]
@@ -75,6 +80,7 @@ export default function App() {
             to: '/administrar-promotores',
             label: 'Administrar promotores'
           },
+          { to: '/administrar-clientes', label: 'Administrar clientes' },
           {
             to: '/reportes',
             label: 'Reportes'
@@ -141,9 +147,7 @@ export default function App() {
         {isAuthenticated && (
           <p className="session-pill">
             Sesión iniciada como:{' '}
-            {role === 'admin'
-              ? 'Administrador'
-              : 'Promotor'}
+            {role === 'admin' ? 'Administrador' : role === 'promoter' ? 'Promotor' : 'Cliente'}
           </p>
         )}
         </div>
@@ -174,7 +178,7 @@ export default function App() {
           <Route
             path="/familias"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute staffOnly>
                 <FamilyPage />
               </ProtectedRoute>
             }
@@ -183,7 +187,7 @@ export default function App() {
           <Route
             path="/prestamos"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute staffOnly>
                 <LoanPage />
               </ProtectedRoute>
             }
@@ -210,6 +214,11 @@ export default function App() {
                 <PromoterPage />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/administrar-clientes"
+            element={<ProtectedRoute adminOnly><PromoterPage key="customer" customerMode /></ProtectedRoute>}
           />
 
           <Route

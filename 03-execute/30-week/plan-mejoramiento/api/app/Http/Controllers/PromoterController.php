@@ -19,7 +19,7 @@ final class PromoterController extends BaseController
         $data = $request->validate([
             'username' => ['required', 'string', 'max:120'],
             'password' => ['required', 'string', 'min:12'],
-            'role' => ['required', 'string', 'in:promoter'],
+            'role' => ['required', 'string', 'in:promoter,customer'],
         ]);
         return response()->json($this->register->execute($data['username'], $data['password'], $data['role']), 201);
     }

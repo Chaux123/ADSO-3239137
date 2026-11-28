@@ -13,6 +13,7 @@ final class LoanTest extends TestCase
 
         // Authentication is tested in a separate test file.
         $this->withoutMiddleware(JwtMiddleware::class);
+        $this->withoutMiddleware(\App\Http\Middleware\StaffMiddleware::class);
     }
 
     public function test_loan_requires_family_id(): void

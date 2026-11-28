@@ -15,6 +15,7 @@ final class FamilyTest extends TestCase
 
         // Authentication is tested separately.
         $this->withoutMiddleware(JwtMiddleware::class);
+        $this->withoutMiddleware(\App\Http\Middleware\StaffMiddleware::class);
     }
 
     public function test_family_registration_requires_full_name(): void

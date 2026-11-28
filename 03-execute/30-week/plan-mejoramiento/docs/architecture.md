@@ -264,7 +264,7 @@ La base de datos deberá incluir las restricciones necesarias para proteger esta
 
 El sistema utilizará autenticación mediante tokens JWT.
 
-Los usuarios autenticados serán administradores y promotores.
+Los usuarios autenticados serán administradores, promotores y clientes. El cliente se incorporó posteriormente a solicitud del usuario.
 
 Las familias serán registros del dominio y no tendrán cuentas para iniciar sesión.
 
@@ -289,6 +289,10 @@ Podrá gestionar promotores, juguetes, familias, préstamos, devoluciones y repo
 **Promotor (`promoter`)**
 
 Podrá consultar juguetes, gestionar familias, registrar préstamos, registrar devoluciones y consultar el historial.
+
+**Cliente (`customer`)**
+
+Puede iniciar sesión y consultar categorías, catálogo, disponibilidad e imágenes. Las operaciones de familias y préstamos requieren un rol de personal; la API valida esta restricción independientemente de la interfaz.
 
 Las operaciones administrativas estarán restringidas según el contrato HTTP.
 

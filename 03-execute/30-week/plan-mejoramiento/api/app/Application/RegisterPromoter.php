@@ -22,7 +22,10 @@ final class RegisterPromoter
         if ($this->promoters->usernameExists($promoter->username)) {
             throw new ApiException('USERNAME_TAKEN', 'El nombre de usuario ya existe.', 409);
         }
-        $result = ['id' => (string) Str::uuid(), 'username' => $promoter->username, 'role' => 'promoter'];
+        if (!in_array($role, ['promoter', 'customer'], true)) {
+            throw new ApiException('VALIDATION_ERROR', 'El rol seleccionado no es válido.', 422);
+        }
+        $result = ['id' => (string) Str::uuid(), 'username' => $promoter->username, 'role' => $role];
         $this->promoters->insert($result + ['password_hash' => Hash::make($password)]);
         return $result;
     }

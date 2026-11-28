@@ -11,7 +11,7 @@ final readonly class Promoter
     public function __construct(string $username, string $role)
     {
         $username = PromoterRules::username($username);
-        if (mb_strlen($username) > 120 || !in_array($role, ['admin', 'promoter'], true)) {
+        if (mb_strlen($username) > 120 || !in_array($role, ['admin', 'promoter', 'customer'], true)) {
             throw new InvalidArgumentException('Los datos del usuario no son válidos.');
         }
         $this->username = $username;

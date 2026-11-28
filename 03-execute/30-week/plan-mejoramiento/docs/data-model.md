@@ -212,7 +212,7 @@ La tabla `loans` contendrá la clave foránea `family_id`, que permitirá identi
 
 Almacena los usuarios autorizados para administrar y operar la juegoteca.
 
-El sistema manejará los roles `admin` y `promoter`.
+El sistema maneja los roles `admin`, `promoter` y `customer`. El rol de cliente es una extensión posterior solicitada por el usuario.
 
 ### 8.2. Estructura
 
@@ -229,6 +229,7 @@ Los únicos roles válidos serán:
 
 - `admin`
 - `promoter`
+- `customer`
 
 La base de datos deberá impedir valores distintos a estos.
 
@@ -440,7 +441,7 @@ CHECK (
 ### 13.3. Roles permitidos
 
 ```sql
-CHECK (role IN ('admin', 'promoter'))
+CHECK (role IN ('admin', 'promoter', 'customer'))
 ```
 
 ### 13.4. Referencia única entre juguetes activos

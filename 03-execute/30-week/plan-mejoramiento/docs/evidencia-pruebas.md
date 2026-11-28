@@ -54,3 +54,4 @@ La prueba de concurrencia requiere PostgreSQL y ejecuta migraciones en la base d
 - El registro de familias utiliza un caso de uso y un puerto de persistencia; una prueba arquitectónica comprueba su independencia de adaptadores. Se verificó que los identificadores malformados devuelven 404 sin provocar errores de PostgreSQL.
 - El inicio de sesión usa un caso de uso y un puerto de persistencia de promotores; la batería completa volvió a pasar tras el cambio.
 - La creación de promotores también usa un caso de uso y el puerto de persistencia; pasaron la batería completa y las comprobaciones arquitectónicas posteriores.
+- La extensión del rol de cliente se probó en PostgreSQL aislado: 133 pruebas y 373 aserciones aprobadas. Se verificó el ingreso, la consulta de catálogo y el rechazo de operaciones reservadas al personal.
