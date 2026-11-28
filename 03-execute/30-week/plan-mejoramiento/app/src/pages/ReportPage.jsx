@@ -153,7 +153,7 @@ export default function ReportPage() {
       ) : (
         <>
           <div
-            className="card-grid"
+            className="card-grid report-summary"
             style={{ marginBottom: '24px' }}
           >
             <div className="card">

@@ -108,7 +108,7 @@ export default function PromoterPage() {
   }
 
   return (
-    <section className="page-content">
+    <section className="page-content page-content--medium">
       <div
         style={{
           maxWidth: '600px',

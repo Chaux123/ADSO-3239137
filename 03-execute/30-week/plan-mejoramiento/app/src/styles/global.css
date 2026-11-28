@@ -538,3 +538,37 @@ button:disabled {
   .main-content { width: 100%; }
   .app-footer { width: 100%; }
 }
+
+/* Distribución adaptable para aprovechar el ancho disponible. */
+.app-container {
+  grid-template-columns: clamp(210px, 18vw, 250px) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.main-content {
+  max-width: 1600px;
+  padding: clamp(22px, 3vw, 40px);
+}
+.page-content {
+  min-width: 0;
+  padding: clamp(20px, 2.5vw, 36px);
+}
+.page-content--narrow { max-width: 540px; margin-inline: auto; }
+.page-content--medium { max-width: 760px; margin-inline: auto; }
+.card-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr)); }
+.report-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.report-summary .card { min-width: 0; }
+.form-group input, .form-group select, .form-group textarea { min-width: 0; max-width: 100%; }
+.page-content, .card { overflow-wrap: anywhere; }
+
+@media (max-width: 760px) {
+  .main-content { padding: 20px 14px 28px; }
+  .page-content { padding: 20px 16px; }
+  .card-grid { gap: 14px; }
+  .app-footer { padding: 18px 14px; }
+  .welcome-hero { min-height: 0; }
+}
+
+@media (max-width: 480px) {
+  .report-summary { grid-template-columns: minmax(0, 1fr); }
+  .page-content form[style] > div[style] { min-width: 0; max-width: 100%; }
+}

@@ -42,7 +42,7 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="page-content">
+    <section className="page-content page-content--narrow">
       <div style={{ maxWidth: '420px', margin: '0 auto' }}>
         <h2>Iniciar sesión</h2>
 
