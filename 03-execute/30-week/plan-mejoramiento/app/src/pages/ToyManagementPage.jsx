@@ -22,7 +22,7 @@ const INITIAL_FORM = {
   total_units: 1
 };
 
-export default function ToyManagementPage() {
+export default function ToyManagementPage({ editMode = false }) {
   const { isAdmin } = useAuth();
 
   const [toys, setToys] = useState([]);
@@ -41,6 +41,8 @@ export default function ToyManagementPage() {
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
 
   function refreshToys() {
     setRefreshKey((current) => current + 1);
@@ -88,7 +90,7 @@ export default function ToyManagementPage() {
       setLoading(true);
 
       try {
-        const response = await getToys({ page });
+        const response = await getToys({ page, ...(search ? { q: search } : {}) });
 
         if (cancelled) return;
 
@@ -133,7 +135,7 @@ export default function ToyManagementPage() {
     return () => {
       cancelled = true;
     };
-  }, [isAdmin, page, refreshKey]);
+  }, [isAdmin, page, refreshKey, search]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -331,11 +333,10 @@ export default function ToyManagementPage() {
 
   return (
     <section className="page-content">
-      <h2>Administración de juguetes</h2>
+      <h2>{editMode ? 'Editar juguetes' : 'Administración de juguetes'}</h2>
 
       <p>
-        Registra juguetes, modifica sus cantidades
-        y administra sus fotografías.
+        {editMode ? 'Busca un juguete y selecciona Editar para actualizar su información.' : 'Registra juguetes y administra el inventario y sus fotografías.'}
       </p>
 
       {error && (
@@ -350,7 +351,7 @@ export default function ToyManagementPage() {
         </div>
       )}
 
-      <div
+      {(!editMode || editingId) && <div
         className="card"
         style={{ marginBottom: '28px' }}
       >
@@ -360,7 +361,7 @@ export default function ToyManagementPage() {
             : 'Registrar nuevo juguete'}
         </h3>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="toy-form">
           <div className="form-group">
             <label htmlFor="toy-name">
               Nombre del juguete
@@ -466,6 +467,7 @@ export default function ToyManagementPage() {
           </div>
 
           <div
+            className="toy-form-actions"
             style={{
               display: 'flex',
               gap: '12px',
@@ -496,10 +498,15 @@ export default function ToyManagementPage() {
             )}
           </div>
         </form>
-      </div>
+      </div>}
 
       <div className="card">
         <h3>Inventario de juguetes</h3>
+
+        {editMode && <form className="toy-search" onSubmit={(event) => { event.preventDefault(); setPage(1); setSearch(searchInput.trim()); }}>
+          <div className="form-group"><label htmlFor="edit-toy-search">Buscar por nombre o marca</label><input id="edit-toy-search" type="search" value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Buscar juguete" maxLength={250} /></div>
+          <button type="submit" className="btn btn-primary">Buscar</button>
+        </form>}
 
         {loading ? (
           <p role="status">Cargando inventario...</p>
@@ -510,7 +517,7 @@ export default function ToyManagementPage() {
             <div className="card-grid">
               {toys.map((toy) => (
                 <article
-                  className="card"
+                  className="card toy-inventory-card"
                   key={toy.id}
                 >
                   {toy.cover_key && (
@@ -543,26 +550,25 @@ export default function ToyManagementPage() {
                     {toy.available_units} de {toy.total_units}
                   </p>
 
-                  <button
+                  {editMode && <button
                     type="button"
                     className="btn btn-secondary"
                     onClick={() => startEditing(toy)}
                     disabled={processingId === toy.id}
                   >
                     Editar
-                  </button>
+                  </button>}
 
-                  <button
+                  {!editMode && <button
                     type="button"
                     className="btn btn-secondary"
                     onClick={() => handleDelete(toy)}
                     disabled={processingId === toy.id}
-                    style={{ marginLeft: '8px' }}
                   >
                     Retirar
-                  </button>
+                  </button>}
 
-                  <div
+                  {!editMode && <div
                     className="form-group"
                     style={{ marginTop: '16px' }}
                   >
@@ -583,9 +589,9 @@ export default function ToyManagementPage() {
                         event.target.value = '';
                       }}
                     />
-                  </div>
+                  </div>}
 
-                  {toy.cover_key && (
+                  {!editMode && toy.cover_key && (
                     <button
                       type="button"
                       className="btn btn-secondary"

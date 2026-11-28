@@ -70,6 +70,7 @@ export default function App() {
             to: '/administrar-juguetes',
             label: 'Administrar juguetes'
           },
+          { to: '/editar-juguetes', label: 'Editar juguetes' },
           {
             to: '/administrar-promotores',
             label: 'Administrar promotores'
@@ -192,9 +193,14 @@ export default function App() {
             path="/administrar-juguetes"
             element={
               <ProtectedRoute adminOnly>
-                <ToyManagementPage />
+                <ToyManagementPage key="manage" />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/editar-juguetes"
+            element={<ProtectedRoute adminOnly><ToyManagementPage key="edit" editMode /></ProtectedRoute>}
           />
 
           <Route
