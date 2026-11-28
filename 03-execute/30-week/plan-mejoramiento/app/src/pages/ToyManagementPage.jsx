@@ -336,7 +336,7 @@ export default function ToyManagementPage({ editMode = false }) {
       <h2>{editMode ? 'Editar juguetes' : 'Administración de juguetes'}</h2>
 
       <p>
-        {editMode ? 'Busca un juguete y selecciona Editar para actualizar su información.' : 'Registra juguetes y administra el inventario y sus fotografías.'}
+        {editMode ? 'Busca un juguete para editarlo, retirarlo o administrar su fotografía.' : 'Registra juguetes y consulta el inventario disponible.'}
       </p>
 
       {error && (
@@ -547,25 +547,25 @@ export default function ToyManagementPage({ editMode = false }) {
                     {toy.available_units} de {toy.total_units}
                   </p>
 
-                  {editMode && <button
+                  {editMode && <div className="toy-card-actions"><button
                     type="button"
                     className="btn btn-secondary toy-card-action"
                     onClick={() => startEditing(toy)}
                     disabled={processingId === toy.id}
                   >
                     Editar
-                  </button>}
+                  </button>
 
-                  {!editMode && <button
+                  <button
                     type="button"
                     className="btn btn-secondary toy-card-action"
                     onClick={() => handleDelete(toy)}
                     disabled={processingId === toy.id}
                   >
                     Retirar
-                  </button>}
+                  </button></div>}
 
-                  {!editMode && <div
+                  {editMode && <div
                     className="form-group"
                     style={{ marginTop: '16px' }}
                   >
@@ -588,7 +588,7 @@ export default function ToyManagementPage({ editMode = false }) {
                     />
                   </div>}
 
-                  {!editMode && toy.cover_key && (
+                  {editMode && toy.cover_key && (
                     <button
                       type="button"
                       className="btn btn-secondary"

@@ -624,3 +624,9 @@ button:disabled {
 .toy-inventory-card p { margin: 5px 0; }
 .toy-inventory-card .toy-card-action { align-self: flex-start; margin-top: auto; }
 .toy-inventory-card p:last-of-type { margin-bottom: 16px; }
+.toy-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
