@@ -20,9 +20,18 @@ import { useAuth } from './context/AuthContext.jsx';
 
 function TemporaryPage({ title, description }) {
   return (
-    <section className="page-content">
-      <h2>{title}</h2>
-      <p>{description}</p>
+    <section className="welcome-hero">
+      <div className="welcome-copy">
+        <span className="eyebrow">UN MUNDO DE POSIBILIDADES</span>
+        <h2>{title}</h2>
+        <p>{description} Cada juguete compartido es una nueva aventura para nuestra comunidad.</p>
+        <NavLink className="btn btn-primary" to="/catalogo">Explorar el catálogo</NavLink>
+      </div>
+      <div className="welcome-art" aria-hidden="true">
+        <span className="art-star">✦</span><span className="art-ball">●</span>
+        <span className="art-toy">🧸</span><span className="art-block">A</span>
+        <span className="art-sparkle">✳</span>
+      </div>
     </section>
   );
 }
@@ -74,9 +83,9 @@ export default function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Toy Library</h1>
-
-        <p>Biblioteca comunitaria de juguetes</p>
+        <div className="header-inner">
+        <div className="brand-lockup"><span className="brand-icon" aria-hidden="true">✦</span><div><h1>Toy Library</h1>
+        <p>Jugar nos une</p></div></div>
 
         <nav
           className="main-nav"
@@ -120,18 +129,14 @@ export default function App() {
         </nav>
 
         {isAuthenticated && (
-          <p
-            style={{
-              marginTop: '16px',
-              marginBottom: 0
-            }}
-          >
+          <p className="session-pill">
             Sesión iniciada como:{' '}
             {role === 'admin'
               ? 'Administrador'
               : 'Promotor'}
           </p>
         )}
+        </div>
       </header>
 
       <main className="main-content">
