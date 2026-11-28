@@ -103,18 +103,8 @@ export default function ReportPage() {
         className="card"
         style={{ marginBottom: '24px' }}
       >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            gap: '12px',
-            flexWrap: 'wrap'
-          }}
-        >
-          <div
-            className="form-group"
-            style={{ marginBottom: 0 }}
-          >
+        <div className="report-filters">
+          <div className="form-group">
             <label htmlFor="report-limit">
               Cantidad de resultados
             </label>

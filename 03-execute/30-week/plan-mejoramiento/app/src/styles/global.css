@@ -451,6 +451,33 @@ button:disabled {
   transition:none!important;
   scroll-behavior:auto!important
 }
+}
 
+/* Alineación uniforme de los filtros del reporte. */
+.report-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 16px;
+}
+
+.report-filters .form-group {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.report-filters input,
+.report-filters select,
+.report-filters .btn {
+  min-height: 50px;
+}
+
+@media (max-width: 800px) {
+  .report-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .report-filters { grid-template-columns: minmax(0, 1fr); }
+  .report-filters .btn { width: 100%; }
 }
 
