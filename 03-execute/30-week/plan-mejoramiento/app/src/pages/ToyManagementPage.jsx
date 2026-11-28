@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ToyCover from '../components/ToyCover.jsx';
 
 import { useAuth } from '../context/AuthContext.jsx';
@@ -30,10 +30,12 @@ export default function ToyManagementPage({ editMode = false }) {
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [editingId, setEditingId] = useState(null);
-  const [expandedToyId, setExpandedToyId] = useState(null);
+  const modalRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  savingRef.current = saving;
   const [processingId, setProcessingId] = useState(null);
 
   const [error, setError] = useState('');
@@ -44,6 +46,24 @@ export default function ToyManagementPage({ editMode = false }) {
   const [refreshKey, setRefreshKey] = useState(0);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (!editingId || !editMode) return;
+    const previousFocus = document.activeElement;
+    modalRef.current?.focus();
+    function handleKeyDown(event) {
+      if (event.key === 'Escape' && !savingRef.current) resetForm();
+      if (event.key !== 'Tab') return;
+      const controls = modalRef.current?.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), [href]');
+      if (!controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => { document.removeEventListener('keydown', handleKeyDown); previousFocus?.focus(); };
+  }, [editingId, editMode]);
 
   function refreshToys() {
     setRefreshKey((current) => current + 1);
@@ -166,10 +186,6 @@ export default function ToyManagementPage({ editMode = false }) {
     setError('');
     setSuccess('');
 
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
   }
 
   async function handleSubmit(event) {
@@ -332,6 +348,8 @@ export default function ToyManagementPage({ editMode = false }) {
     );
   }
 
+  const selectedToy = toys.find((toy) => toy.id === editingId);
+
   return (
     <section className="page-content">
       <h2>{editMode ? 'Editar juguetes' : 'Administración de juguetes'}</h2>
@@ -340,7 +358,7 @@ export default function ToyManagementPage({ editMode = false }) {
         {editMode ? 'Busca un juguete para editarlo, retirarlo o administrar su fotografía.' : 'Registra juguetes y consulta el inventario disponible.'}
       </p>
 
-      {error && (
+      {error && !editingId && (
         <div className="error-message" role="alert">
           {error}
         </div>
@@ -352,15 +370,22 @@ export default function ToyManagementPage({ editMode = false }) {
         </div>
       )}
 
-      {(!editMode || editingId) && <div
-        className="card"
-        style={{ marginBottom: '28px' }}
+      {(!editMode || editingId) && <div className={editMode ? 'toy-modal-backdrop' : undefined}>
+      <div
+        ref={editMode ? modalRef : undefined}
+        role={editMode ? 'dialog' : undefined}
+        aria-modal={editMode ? 'true' : undefined}
+        aria-labelledby={editMode ? 'toy-modal-title' : undefined}
+        tabIndex={editMode ? -1 : undefined}
+        className={editMode ? 'card toy-modal' : 'card toy-registration'}
       >
-        <h3>
+        <h3 id={editMode ? 'toy-modal-title' : undefined}>
           {editingId
             ? 'Editar juguete'
             : 'Registrar nuevo juguete'}
         </h3>
+        {editMode && error && <div className="error-message" role="alert">{error}</div>}
+        {editMode && success && <div className="success-message" role="status">{success}</div>}
 
         <form onSubmit={handleSubmit} className="toy-form">
           <div className="form-group">
@@ -499,7 +524,15 @@ export default function ToyManagementPage({ editMode = false }) {
             )}
           </div>
         </form>
-      </div>}
+        {editMode && selectedToy && <div className="toy-modal-photo">
+          <h4>Fotografía del juguete</h4>
+          <div className="form-group">
+            <label htmlFor="modal-toy-cover">Subir fotografía</label>
+            <input id="modal-toy-cover" type="file" accept=".jpg,.jpeg,.png" disabled={processingId === selectedToy.id} onChange={(event) => { const file = event.target.files?.[0]; handleUploadCover(selectedToy.id, file); event.target.value = ''; }} />
+          </div>
+          {selectedToy.cover_key && <button type="button" className="btn btn-secondary" onClick={() => handleDeleteCover(selectedToy.id)} disabled={processingId === selectedToy.id}>Eliminar fotografía</button>}
+        </div>}
+      </div></div>}
 
       <div className="card">
         <h3>Inventario de juguetes</h3>
@@ -551,9 +584,7 @@ export default function ToyManagementPage({ editMode = false }) {
                   {editMode && <div className="toy-card-actions"><button
                     type="button"
                     className="btn btn-secondary toy-card-action"
-                    aria-expanded={expandedToyId === toy.id}
-                    aria-controls={`toy-edit-menu-${toy.id}`}
-                    onClick={() => setExpandedToyId((current) => current === toy.id ? null : toy.id)}
+                    onClick={() => startEditing(toy)}
                     disabled={processingId === toy.id}
                   >
                     Editar
@@ -568,43 +599,6 @@ export default function ToyManagementPage({ editMode = false }) {
                     Retirar
                   </button></div>}
 
-                  {editMode && <div id={`toy-edit-menu-${toy.id}`} className="toy-edit-menu" hidden={expandedToyId !== toy.id}>
-                    <button type="button" className="btn btn-secondary toy-edit-info" onClick={() => startEditing(toy)} disabled={processingId === toy.id}>
-                      Editar información
-                    </button>
-                    <div className="form-group">
-                    <label htmlFor={`cover-${toy.id}`}>
-                      Subir fotografía
-                    </label>
-
-                    <input
-                      id={`cover-${toy.id}`}
-                      type="file"
-                      accept=".jpg,.jpeg,.png"
-                      disabled={processingId === toy.id}
-                      onChange={(event) => {
-                        const file = event.target.files?.[0];
-
-                        handleUploadCover(toy.id, file);
-
-                        event.target.value = '';
-                      }}
-                    />
-                    </div>
-
-                  {toy.cover_key && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={() =>
-                        handleDeleteCover(toy.id)
-                      }
-                      disabled={processingId === toy.id}
-                    >
-                      Eliminar fotografía
-                    </button>
-                  )}
-                  </div>}
                 </article>
               ))}
             </div>

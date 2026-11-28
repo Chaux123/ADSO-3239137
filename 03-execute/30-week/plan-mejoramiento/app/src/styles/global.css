@@ -630,12 +630,27 @@ button:disabled {
   gap: 8px;
   margin-top: auto;
 }
-.toy-edit-menu:not([hidden]) {
-  display: grid;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid #edecf5;
+.toy-registration { margin-bottom: 28px; }
+.toy-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(29, 25, 50, .58);
 }
-.toy-edit-menu .toy-edit-info { justify-self: start; margin-top: 0; }
-.toy-edit-menu .btn { margin-top: 0; }
+.toy-modal {
+  width: min(720px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: clamp(20px, 3vw, 32px);
+  box-shadow: 0 24px 70px rgba(22, 18, 52, .25);
+}
+.toy-modal:hover { transform: none; }
+.toy-modal:focus { outline: none; }
+.toy-modal h3 { margin-top: 0; }
+.toy-modal-photo { margin-top: 24px; padding-top: 16px; border-top: 1px solid #edecf5; }
+.toy-modal-photo h4 { margin: 0 0 14px; }
+.toy-modal-photo input[type="file"] { width: 100%; max-width: 100%; }
