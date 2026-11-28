@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
   const isPromoter =
     isAuthenticated && role === 'promoter';
 
-  async function signIn(username, password) {
+  async function signIn(username, password, expectedRole) {
     setLoading(true);
     setError(null);
 
@@ -50,6 +50,11 @@ export function AuthProvider({ children }) {
 
       const newToken = response.access_token;
       const newRole = response.role;
+
+      if (expectedRole && newRole !== expectedRole) {
+        apiLogout();
+        throw new Error('La cuenta no corresponde al tipo de acceso seleccionado.');
+      }
 
       sessionStorage.setItem(ROLE_KEY, newRole);
 

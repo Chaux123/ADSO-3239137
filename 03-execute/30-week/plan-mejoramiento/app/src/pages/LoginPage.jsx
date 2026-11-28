@@ -15,6 +15,7 @@ export default function LoginPage() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
 
   const [validationError, setValidationError] = useState('');
 
@@ -26,6 +27,11 @@ export default function LoginPage() {
     event.preventDefault();
     setValidationError('');
 
+    if (!selectedRole) {
+      setValidationError('Selecciona cómo deseas ingresar.');
+      return;
+    }
+
     if (!username.trim() || !password) {
       setValidationError(
         'Debes ingresar tu usuario y contraseña.'
@@ -34,7 +40,7 @@ export default function LoginPage() {
     }
 
     try {
-      await signIn(username.trim(), password);
+      await signIn(username.trim(), password, selectedRole);
       navigate('/catalogo', { replace: true });
     } catch {
       // AuthContext stores the error message.
@@ -63,6 +69,15 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="login-role">¿Cómo deseas ingresar?</label>
+            <select id="login-role" value={selectedRole} onChange={(event) => { setSelectedRole(event.target.value); setValidationError(''); }} required disabled={loading}>
+              <option value="">Selecciona tu tipo de cuenta</option>
+              <option value="admin">Administrador</option>
+              <option value="customer">Cliente</option>
+              <option value="promoter">Promotor</option>
+            </select>
+          </div>
           <div className="form-group">
             <label htmlFor="username">
               Nombre de usuario
